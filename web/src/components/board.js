@@ -27,7 +27,9 @@ const Board = props => {
   const checkWin = () => {
     for (let i = 0; i < props.board_size; i++) {
       for (let j = 0; j < props.board_size; j++) {
-        if (props.board_solution[i][j] !== props.board_state[i][j]) return
+        if (props.board_solution[i][j] === 1) {
+          if (props.board_state[i][j] !== 1) return
+        }
       }
     }
 
