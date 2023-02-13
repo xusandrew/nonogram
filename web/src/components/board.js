@@ -11,6 +11,8 @@ const Board = props => {
   const [boardStyle, setBoardStyle] = useState({})
   const [mouseDown, setMouseDown] = useState(false)
   const [firstSelected, setFirstSelected] = useState([])
+  const [verticalBarSums, setVerticalBarSums] = useState([])
+  const [horizontalBarSums, setHorizontalBarSums] = useState([])
 
   const getIndex = i => {
     let row = Math.floor(i / props.board_size)
@@ -22,6 +24,53 @@ const Board = props => {
     if (mouseDown) {
       updateBoard(row, column)
     }
+  }
+
+  const onChangeVerticalBarSums = val => {
+    setVerticalBarSums(val)
+    forceUpdate()
+  }
+
+  const onChangeHorizontalBarSums = val => {
+    setHorizontalBarSums(val)
+    forceUpdate()
+  }
+
+  const getTotalFromString = str => {
+    let total = 0
+    str.split(' ').forEach(num => (total += parseInt(num)))
+    return total
+  }
+
+  const checkCompleteRow = (board, row, column) => {
+    const rowTotal = getTotalFromString(horizontalBarSums[row])
+    const columnTotal = getTotalFromString(verticalBarSums[column])
+
+    let rowOccurrences = 0
+    let columnOccurrences = 0
+
+    for (let i = 0; i < props.board_size; i++) {
+      if (board[row][i] === 1) rowOccurrences += 1
+      if (board[i][column] === 1) columnOccurrences += 1
+    }
+
+    if (rowTotal === rowOccurrences) {
+      for (let i = 0; i < props.board_size; i++) {
+        if (props.board_solution[row][i] === 0) {
+          board[row][i] = 2
+        }
+      }
+    }
+
+    if (columnTotal === columnOccurrences) {
+      for (let i = 0; i < props.board_size; i++) {
+        if (props.board_solution[i][column] === 0) {
+          board[i][column] = 2
+        }
+      }
+    }
+
+    return board
   }
 
   const checkWin = () => {
@@ -70,10 +119,10 @@ const Board = props => {
       return
     }
 
-    props.on_change_board_state(boardState => {
-      boardState[row][column] = props.selection_mode
-      return boardState
-    })
+    let tempBoard = props.board_state
+    tempBoard[row][column] = props.selection_mode
+    tempBoard = checkCompleteRow(tempBoard, row, column)
+    props.on_change_board_state(tempBoard)
     checkWin()
   }
 
@@ -87,10 +136,20 @@ const Board = props => {
   return (
     <div className='boardContainer'>
       <div></div>
-      <SideBoard board_solution={props.board_solution} mode='vBars' />
-      <SideBoard board_solution={props.board_solution} mode='hBars' />
+      <SideBoard
+        board_solution={props.board_solution}
+        mode='vBars'
+        vertical_bar_sums={verticalBarSums}
+        on_change_vertical_bar_sums={onChangeVerticalBarSums}
+      />
+      <SideBoard
+        board_solution={props.board_solution}
+        mode='hBars'
+        horizontal_bar_sums={horizontalBarSums}
+        on_change_horizontal_bar_sums={onChangeHorizontalBarSums}
+      />
       <div className='board' style={boardStyle}>
-        {props.board_state.flat().map((square, i) => {
+        {props.board_state?.flat().map((square, i) => {
           return (
             <div
               key={i}

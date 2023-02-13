@@ -26,7 +26,7 @@ function App() {
   const [gameWon, setGameWon] = useState(false)
 
   const printBoard = () => {
-    console.log(boardState)
+    console.log(boardState.flat())
   }
 
   const onChangeBoardState = val => {

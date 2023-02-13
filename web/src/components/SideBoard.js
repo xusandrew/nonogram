@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const SideBoard = props => {
   const flipArray = arr => {
@@ -32,13 +32,38 @@ const SideBoard = props => {
     return res.slice(1)
   }
 
+  useEffect(() => {
+    if (
+      props.on_change_horizontal_bar_sums === undefined &&
+      props.on_change_vertical_bar_sums === undefined
+    )
+      return
+
+    if (props.mode === 'vBars') {
+      let vertical = []
+      flipArray(props.board_solution).forEach(arr => {
+        vertical.push(getString(arr))
+      })
+
+      props.on_change_vertical_bar_sums(vertical)
+    } else if (props.mode === 'hBars') {
+      let horizontal = []
+      props.board_solution.forEach(arr => {
+        horizontal.push(getString(arr))
+      })
+
+      props.on_change_horizontal_bar_sums(horizontal)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   if (props.mode === 'vBars') {
     return (
       <div className='sideBoard vBars'>
-        {flipArray(props.board_solution).map((arr, i) => {
+        {props.vertical_bar_sums.map((str, i) => {
           return (
             <div key={i} className='sideSquare'>
-              {getString(arr).split(' ').join('')}
+              {str.split(' ').join('')}
             </div>
           )
         })}
@@ -47,10 +72,10 @@ const SideBoard = props => {
   } else {
     return (
       <div className='sideBoard hBars'>
-        {props.board_solution.map((arr, i) => {
+        {props.horizontal_bar_sums.map((str, i) => {
           return (
             <div key={i} className='sideSquare'>
-              {getString(arr)}
+              {str}
             </div>
           )
         })}
