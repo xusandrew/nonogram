@@ -19,7 +19,7 @@ function App() {
     sampleGameData.games[0].difficulty // temp definition
   )
   const [boardIndex, setBoardIndex] = useState(0)
-  const [boardSize, setBoardSize] = useState(sampleGameData.games[0].size)
+  const [boardSize, setBoardSize] = useState(sampleGameData.games[0].size) //temp definition
   const [boardState, setBoardState] = useState([])
   const [selectionMode, setSelectionMode] = useState(1)
   const [mistakes, setMistakes] = useState(0)

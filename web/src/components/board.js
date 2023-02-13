@@ -10,10 +10,17 @@ const Board = props => {
   const forceUpdate = useForceUpdate()
   const [boardStyle, setBoardStyle] = useState({})
   const [mouseDown, setMouseDown] = useState(false)
+  const [firstSelected, setFirstSelected] = useState([])
 
-  const handleHover = i => {
+  const getIndex = i => {
+    let row = Math.floor(i / props.board_size)
+    let column = i % props.board_size
+    return { row, column }
+  }
+
+  const handleHover = (row, column) => {
     if (mouseDown) {
-      updateBoard(i)
+      updateBoard(row, column)
     }
   }
 
@@ -45,11 +52,11 @@ const Board = props => {
     props.on_change_mistakes(mistakes => mistakes + 1)
   }
 
-  const updateBoard = notFlatIndex => {
+  const updateBoard = (row, column) => {
     if (props.game_won) return
-
-    let row = Math.floor(notFlatIndex / props.board_size)
-    let column = notFlatIndex % props.board_size
+    if (firstSelected.length !== 0) {
+      if (firstSelected?.[0] !== row && firstSelected?.[1] !== column) return
+    }
 
     if (props.board_state[row][column] !== 0) return
 
@@ -88,10 +95,18 @@ const Board = props => {
               className='square'
               onMouseDown={() => {
                 setMouseDown(true)
-                updateBoard(i)
+                let { row, column } = getIndex(i)
+                setFirstSelected([row, column])
+                updateBoard(row, column)
               }}
-              onMouseUp={() => setMouseDown(false)}
-              onMouseEnter={() => handleHover(i)}
+              onMouseUp={() => {
+                setMouseDown(false)
+                setFirstSelected([])
+              }}
+              onMouseEnter={() => {
+                let { row, column } = getIndex(i)
+                handleHover(row, column)
+              }}
             >
               {square === 1 ? (
                 <div className='filled'></div>
