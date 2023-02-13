@@ -25,9 +25,6 @@ function App() {
 
   const printBoard = () => {
     console.log(boardState)
-    // console.log(boardDifficulty)
-    // console.log(boardIndex)
-    // console.log(boardSize)
   }
 
   const onChangeBoardState = val => {

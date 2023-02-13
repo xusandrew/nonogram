@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import SideBoard from './SideBoard'
 
 const Board = props => {
   const [boardStyle, setBoardStyle] = useState({})
@@ -27,27 +28,32 @@ const Board = props => {
   }, [props.board_size])
 
   return (
-    <div className='board' style={boardStyle}>
-      {props.board_state.flat().map((square, i) => {
-        return (
-          <div
-            key={i}
-            className='square'
-            onMouseDown={() => {
-              setMouseDown(true)
-              updateBoard(i)
-            }}
-            onMouseUp={() => setMouseDown(false)}
-            onMouseEnter={() => handleHover(i)}
-          >
-            {square === 1 ? (
-              <div className='filled'></div>
-            ) : (
-              <div className='empty'></div>
-            )}
-          </div>
-        )
-      })}
+    <div className='boardContainer'>
+      <div></div>
+      <SideBoard board_state={props.board_state} mode='vBars' />
+      <SideBoard board_state={props.board_state} mode='hBars' />
+      <div className='board' style={boardStyle}>
+        {props.board_state.flat().map((square, i) => {
+          return (
+            <div
+              key={i}
+              className='square'
+              onMouseDown={() => {
+                setMouseDown(true)
+                updateBoard(i)
+              }}
+              onMouseUp={() => setMouseDown(false)}
+              onMouseEnter={() => handleHover(i)}
+            >
+              {square === 1 ? (
+                <div className='filled'></div>
+              ) : (
+                <div className='empty'></div>
+              )}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

@@ -1,14 +1,59 @@
+root {
+    box-sizing: border-box;
+}
+
 .App {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-size: 12px;
 }
+
+.boardContainer {
+    width: clamp(300px, 50vh, 600px);
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    grid-template-rows: 3rem 1fr;
+}
+
+.sideBoard {
+    width:100%;
+    height:100%;
+    display: flex;
+}
+
+.sideBoard.vBars {
+    flex-direction: row;
+    width: 100%;
+}
+
+.sideBoard.hBars {
+    flex-direction: column;
+    height: 100%;
+}
+
+.sideSquare {
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vBars>.sideSquare {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+
+}
+
 
 .board {
     display: grid;
     aspect-ratio: 1/1;
-    width: clamp(300px, 50vh, 600px);
+    
 }
 
 .square {
