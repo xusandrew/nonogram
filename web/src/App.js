@@ -22,6 +22,8 @@ function App() {
   const [boardSize, setBoardSize] = useState(sampleGameData.games[0].size)
   const [boardState, setBoardState] = useState([])
   const [selectionMode, setSelectionMode] = useState(1)
+  const [mistakes, setMistakes] = useState(0)
+  const [gameWon, setGameWon] = useState(false)
 
   const printBoard = () => {
     console.log(boardState)
@@ -34,6 +36,16 @@ function App() {
 
   const onChangeSelectionMode = val => {
     setSelectionMode(val)
+    forceUpdate()
+  }
+
+  const onChangeMistakes = val => {
+    setMistakes(val)
+    forceUpdate()
+  }
+
+  const onChangeGameWon = val => {
+    setGameWon(val)
     forceUpdate()
   }
 
@@ -52,6 +64,7 @@ function App() {
       <GameDataDisplay
         board_difficulty={boardDifficulty}
         board_index={boardIndex}
+        mistakes={mistakes}
       />
       <Board
         board_solution={boardSolution}
@@ -59,10 +72,14 @@ function App() {
         board_size={boardSize}
         on_change_board_state={onChangeBoardState}
         selection_mode={selectionMode}
+        on_change_mistakes={onChangeMistakes}
+        game_won={gameWon}
+        on_change_game_won={onChangeGameWon}
       />
       <GameControls
         selection_mode={selectionMode}
         on_change_selection_mode={onChangeSelectionMode}
+        game_won={gameWon}
       />
     </div>
   )

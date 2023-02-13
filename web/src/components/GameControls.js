@@ -23,6 +23,8 @@ const GameControls = props => {
           O
         </div>
       </div>
+
+      {props.game_won ? <div>Game Won! Congrats</div> : <></>}
     </div>
   )
 }

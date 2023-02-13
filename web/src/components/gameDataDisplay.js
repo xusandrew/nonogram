@@ -20,7 +20,8 @@ const GameDataDisplay = props => {
         <h1>Level: {props.board_index + 1}</h1>
         {getDifficultyName(props.board_difficulty)}
       </div>
-      <div className='timer-section'>
+      <div>
+        <div className='mistakes'>Mistakes: {props.mistakes}</div>
         <div className='timer'>
           {('0' + minutes).slice(-2)}:{('0' + seconds).slice(-2)}
         </div>
