@@ -40,7 +40,11 @@ const Board = props => {
             onMouseUp={() => setMouseDown(false)}
             onMouseEnter={() => handleHover(i)}
           >
-            {square}
+            {square === 1 ? (
+              <div className='filled'></div>
+            ) : (
+              <div className='empty'></div>
+            )}
           </div>
         )
       })}
