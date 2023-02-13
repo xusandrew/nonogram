@@ -6,7 +6,13 @@ import React, { useState, useEffect } from 'react'
 import GameDataDisplay from './components/GameDataDisplay.js'
 import Board from './components/Board'
 
+const useForceUpdate = () => {
+  const [value, setValue] = useState(0)
+  return () => setValue(value => value + 1)
+}
+
 function App() {
+  const forceUpdate = useForceUpdate()
   const [boardState, setBoardState] = useState(
     sampleGameData.games[0].boardData // temp definition
   )
@@ -17,11 +23,16 @@ function App() {
 
   const [boardSize, setBoardSize] = useState(sampleGameData.games[0].size)
 
-  function printBoard() {
+  const printBoard = () => {
     console.log(boardState)
-    console.log(boardDifficulty)
-    console.log(boardIndex)
-    console.log(boardSize)
+    // console.log(boardDifficulty)
+    // console.log(boardIndex)
+    // console.log(boardSize)
+  }
+
+  const onChangeBoardState = val => {
+    setBoardState(val)
+    forceUpdate()
   }
 
   return (
@@ -31,7 +42,11 @@ function App() {
         board_difficulty={boardDifficulty}
         board_index={boardIndex}
       />
-      <Board board_state={boardState} board_size={boardSize} />
+      <Board
+        board_state={boardState}
+        board_size={boardSize}
+        on_change_board_state={onChangeBoardState}
+      />
     </div>
   )
 }

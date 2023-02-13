@@ -2,6 +2,22 @@ import React, { useState, useEffect } from 'react'
 
 const Board = props => {
   const [boardStyle, setBoardStyle] = useState({})
+  const [mouseDown, setMouseDown] = useState(false)
+
+  const handleHover = i => {
+    if (mouseDown) {
+      updateBoard(i)
+    }
+  }
+
+  const updateBoard = notFlatIndex => {
+    let row = Math.floor(notFlatIndex / props.board_size)
+    let column = notFlatIndex % props.board_size
+
+    let tempBoardState = props.board_state
+    tempBoardState[row][column] = 0
+    props.on_change_board_state(tempBoardState)
+  }
 
   useEffect(() => {
     setBoardStyle({
@@ -14,7 +30,16 @@ const Board = props => {
     <div className='board' style={boardStyle}>
       {props.board_state.flat().map((square, i) => {
         return (
-          <div key={i} className='square'>
+          <div
+            key={i}
+            className='square'
+            onMouseDown={() => {
+              setMouseDown(true)
+              updateBoard(i)
+            }}
+            onMouseUp={() => setMouseDown(false)}
+            onMouseEnter={() => handleHover(i)}
+          >
             {square}
           </div>
         )
