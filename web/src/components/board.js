@@ -15,6 +15,8 @@ const Board = props => {
     let row = Math.floor(notFlatIndex / props.board_size)
     let column = notFlatIndex % props.board_size
 
+    if (props.board_state[row][column] !== 0) return
+
     let tempBoardState = props.board_state
     tempBoardState[row][column] = props.selection_mode
     props.on_change_board_state(tempBoardState)
@@ -47,6 +49,8 @@ const Board = props => {
             >
               {square === 1 ? (
                 <div className='filled'></div>
+              ) : square === 2 ? (
+                <div className='crossed'></div>
               ) : (
                 <div className='empty'></div>
               )}

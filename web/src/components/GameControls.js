@@ -2,10 +2,10 @@ import React from 'react'
 
 const GameControls = props => {
   const switchMode = () => {
-    if (props.selection_mode === 0) {
-      props.on_change_selection_mode(1)
+    if (props.selection_mode === 1) {
+      props.on_change_selection_mode(2)
     } else {
-      props.on_change_selection_mode(0)
+      props.on_change_selection_mode(1)
     }
   }
 
@@ -13,7 +13,7 @@ const GameControls = props => {
     <div className='bottomContainer' onClick={switchMode}>
       <div className='controlsContainer'>
         <div
-          className={`control ${props.selection_mode === 0 ? 'active' : ''}`}
+          className={`control ${props.selection_mode === 2 ? 'active' : ''}`}
         >
           X
         </div>
