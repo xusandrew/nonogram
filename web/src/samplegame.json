@@ -2,6 +2,7 @@
     "games": [
         {
             "size": 5,
+            "difficulty": 1,
             "boardData" :[
                 [0, 1, 1, 1, 0],
                 [0, 1, 0, 1, 1],
