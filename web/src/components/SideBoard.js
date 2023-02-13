@@ -35,7 +35,7 @@ const SideBoard = props => {
   if (props.mode === 'vBars') {
     return (
       <div className='sideBoard vBars'>
-        {flipArray(props.board_state).map((arr, i) => {
+        {flipArray(props.board_solution).map((arr, i) => {
           return (
             <div key={i} className='sideSquare'>
               {getString(arr).split(' ').join('')}
@@ -47,7 +47,7 @@ const SideBoard = props => {
   } else {
     return (
       <div className='sideBoard hBars'>
-        {props.board_state.map((arr, i) => {
+        {props.board_solution.map((arr, i) => {
           return (
             <div key={i} className='sideSquare'>
               {getString(arr)}

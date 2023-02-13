@@ -16,7 +16,7 @@ const Board = props => {
     let column = notFlatIndex % props.board_size
 
     let tempBoardState = props.board_state
-    tempBoardState[row][column] = 0
+    tempBoardState[row][column] = props.selection_mode
     props.on_change_board_state(tempBoardState)
   }
 
@@ -30,8 +30,8 @@ const Board = props => {
   return (
     <div className='boardContainer'>
       <div></div>
-      <SideBoard board_state={props.board_state} mode='vBars' />
-      <SideBoard board_state={props.board_state} mode='hBars' />
+      <SideBoard board_solution={props.board_solution} mode='vBars' />
+      <SideBoard board_solution={props.board_solution} mode='hBars' />
       <div className='board' style={boardStyle}>
         {props.board_state.flat().map((square, i) => {
           return (
