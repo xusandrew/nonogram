@@ -12,21 +12,18 @@ const useForceUpdate = () => {
 
 function App() {
   const forceUpdate = useForceUpdate()
-  const [boardSolution, setBoardSolution] = useState(
-    sampleGameData.games[0].boardData // temp definition
-  )
-  const [boardDifficulty, setBoardDifficulty] = useState(
-    sampleGameData.games[0].difficulty // temp definition
-  )
-  const [boardIndex, setBoardIndex] = useState(0)
-  const [boardSize, setBoardSize] = useState(sampleGameData.games[0].size) //temp definition
+  const [boardSolution, setBoardSolution] = useState([])
+  const [boardDifficulty, setBoardDifficulty] = useState([])
+  const [boardIndex, setBoardIndex] = useState(-1)
+  const [boardSize, setBoardSize] = useState(0)
   const [boardState, setBoardState] = useState([])
   const [selectionMode, setSelectionMode] = useState(1)
   const [mistakes, setMistakes] = useState(0)
   const [gameWon, setGameWon] = useState(false)
 
   const printBoard = () => {
-    console.log(boardState.flat())
+    console.log(boardState)
+    console.log(boardIndex)
   }
 
   const onChangeBoardState = val => {
@@ -49,14 +46,43 @@ function App() {
     forceUpdate()
   }
 
-  useEffect(() => {
-    let emptyBoard = []
-    for (let i = 0; i < boardSize; i++) {
-      emptyBoard.push(Array.from({ length: boardSize }, () => 0))
+  const resetBoard = newBoardSize => {
+    let size = newBoardSize
+    if (!size) {
+      size = boardSize
     }
 
+    let emptyBoard = []
+    for (let i = 0; i < size; i++) {
+      emptyBoard.push(Array.from({ length: size }, () => 0))
+    }
     setBoardState(emptyBoard)
-  }, [boardSize])
+    setSelectionMode(1)
+    setMistakes(0)
+    setGameWon(false)
+  }
+
+  const nextBoard = () => {
+    let newBoardIndex = Math.floor(Math.random() * sampleGameData.games.length)
+    while (newBoardIndex === boardIndex) {
+      newBoardIndex = Math.floor(Math.random() * sampleGameData.games.length)
+    }
+
+    let newBoardSize = sampleGameData.games[newBoardIndex].size
+    let newBoardSolution = sampleGameData.games[newBoardIndex].boardData
+    let newBoardDifficulty = sampleGameData.games[newBoardIndex].difficulty
+
+    setBoardSolution(newBoardSolution)
+    setBoardDifficulty(newBoardDifficulty)
+    setBoardIndex(newBoardIndex)
+    setBoardSize(newBoardSize)
+    resetBoard(newBoardSize)
+  }
+
+  useEffect(() => {
+    nextBoard()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className='App'>
@@ -80,6 +106,8 @@ function App() {
         selection_mode={selectionMode}
         on_change_selection_mode={onChangeSelectionMode}
         game_won={gameWon}
+        on_reset={() => resetBoard(null)}
+        on_next_board={nextBoard}
       />
     </div>
   )

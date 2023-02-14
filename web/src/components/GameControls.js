@@ -10,8 +10,8 @@ const GameControls = props => {
   }
 
   return (
-    <div className='bottomContainer' onClick={switchMode}>
-      <div className='controlsContainer'>
+    <div className='bottomContainer'>
+      <div className='controlsContainer' onClick={switchMode}>
         <div
           className={`control ${props.selection_mode === 2 ? 'active' : ''}`}
         >
@@ -22,6 +22,14 @@ const GameControls = props => {
         >
           O
         </div>
+      </div>
+
+      <div className='controlsContainer button' onClick={props.on_reset}>
+        Reset
+      </div>
+
+      <div className='controlsContainer button' onClick={props.on_next_board}>
+        Next
       </div>
 
       {props.game_won ? <div>Game Won! Congrats</div> : <></>}

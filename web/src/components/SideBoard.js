@@ -55,7 +55,7 @@ const SideBoard = props => {
       props.on_change_horizontal_bar_sums(horizontal)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [props.board_solution])
 
   if (props.mode === 'vBars') {
     return (

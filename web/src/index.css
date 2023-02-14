@@ -11,7 +11,7 @@ root {
 }
 
 .boardContainer {
-    width: clamp(300px, 60vh, 600px);
+    width: clamp(300px, 60vw, 600px);
     display: grid;
     grid-template-columns: 3rem 1fr;
     grid-template-rows: 3rem 1fr;
@@ -59,8 +59,8 @@ root {
 .gameDataDisplay {
     display: flex;
     margin: 10px;
-    align-items: end;
-    width: clamp(300px, 50vh, 600px);
+    align-items: flex-end;
+    width: clamp(300px, 50vw, 600px);
     justify-content: space-between;
 }
 
@@ -101,10 +101,11 @@ root {
 
 .bottomContainer {
     margin: 50px;
-    width:clamp(300px, 50vh, 600px);
+    width:clamp(300px, 50vw, 600px);
 
     display:flex;
     justify-content: center;
+    gap: 30px;
 }
 
 .controlsContainer {
@@ -116,7 +117,11 @@ root {
 }
 
 .control {
-    padding: 20px 20px;
+    padding: 20px;
+}
+
+.button {
+    padding: 20px;
 }
 
 .active {
