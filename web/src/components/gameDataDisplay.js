@@ -1,11 +1,6 @@
 import React from 'react'
-import { useStopwatch } from 'react-timer-hook'
 
 const GameDataDisplay = props => {
-  const { seconds, minutes, isRunning, start, pause, reset } = useStopwatch({
-    autoStart: true,
-  })
-
   const getDifficultyName = difficultyNumber => {
     if (difficultyNumber <= 1) return 'Easy'
     if (difficultyNumber <= 2) return 'Normal'
@@ -23,7 +18,7 @@ const GameDataDisplay = props => {
       <div>
         <div className='mistakes'>Mistakes: {props.mistakes}</div>
         <div className='timer'>
-          {('0' + minutes).slice(-2)}:{('0' + seconds).slice(-2)}
+          {('0' + props.minutes).slice(-2)}:{('0' + props.seconds).slice(-2)}
         </div>
       </div>
     </div>

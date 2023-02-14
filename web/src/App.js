@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import GameDataDisplay from './components/GameDataDisplay.js'
 import Board from './components/Board'
 import GameControls from './components/GameControls'
+import { useStopwatch } from 'react-timer-hook'
+import { useCookies } from 'react-cookie'
 
 const useForceUpdate = () => {
   const [, setValue] = useState(0)
@@ -20,10 +22,13 @@ function App() {
   const [selectionMode, setSelectionMode] = useState(1)
   const [mistakes, setMistakes] = useState(0)
   const [gameWon, setGameWon] = useState(false)
+  const { seconds, minutes, start, pause, reset } = useStopwatch({
+    autoStart: false,
+  })
+  const [cookies, setCookie, removeCookie] = useCookies(['scores'])
 
   const printBoard = () => {
-    console.log(boardState)
-    console.log(boardIndex)
+    console.log(cookies)
   }
 
   const onChangeBoardState = val => {
@@ -41,8 +46,43 @@ function App() {
     forceUpdate()
   }
 
+  const saveResult = () => {
+    const currentCookies = cookies['scores']
+    if (!currentCookies) {
+      setCookie(
+        'scores',
+        [
+          {
+            levelId: boardIndex,
+            minutes: minutes,
+            seconds: seconds,
+            mistakes: mistakes,
+          },
+        ],
+        { path: '/' }
+      )
+    } else {
+      setCookie(
+        'scores',
+        [
+          ...currentCookies,
+          {
+            levelId: boardIndex,
+            minutes: minutes,
+            seconds: seconds,
+            mistakes: mistakes,
+          },
+        ],
+        { path: '/' }
+      )
+    }
+
+    pause()
+  }
+
   const onChangeGameWon = val => {
     setGameWon(val)
+    saveResult()
     forceUpdate()
   }
 
@@ -60,6 +100,8 @@ function App() {
     setSelectionMode(1)
     setMistakes(0)
     setGameWon(false)
+    reset()
+    start()
   }
 
   const nextBoard = () => {
@@ -87,10 +129,13 @@ function App() {
   return (
     <div className='App'>
       <button onClick={printBoard}>Hi</button>
+      <button onClick={() => removeCookie('scores')}>Remove Cookies</button>
       <GameDataDisplay
         board_difficulty={boardDifficulty}
         board_index={boardIndex}
         mistakes={mistakes}
+        seconds={seconds}
+        minutes={minutes}
       />
       <Board
         board_solution={boardSolution}
