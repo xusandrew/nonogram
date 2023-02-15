@@ -31,8 +31,6 @@ const GameControls = props => {
       <div className='controlsContainer button' onClick={props.on_next_board}>
         Next
       </div>
-
-      {props.game_won ? <div>Game Won! Congrats</div> : <></>}
     </div>
   )
 }

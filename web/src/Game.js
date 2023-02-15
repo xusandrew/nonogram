@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import GameDataDisplay from './components/GameDataDisplay.js'
 import Board from './components/Board'
 import GameControls from './components/GameControls'
+import WinScreen from './components/WinScreen.js'
 import { useStopwatch } from 'react-timer-hook'
 import { useCookies } from 'react-cookie'
 
@@ -13,7 +14,7 @@ const useForceUpdate = () => {
 
 const Game = props => {
   const forceUpdate = useForceUpdate()
-  const puzzleList = props.puzzleList
+  const { puzzleList } = props
   const [boardSolution, setBoardSolution] = useState([])
   const [boardDifficulty, setBoardDifficulty] = useState([])
   const [boardIndex, setBoardIndex] = useState(-1)
@@ -22,14 +23,11 @@ const Game = props => {
   const [selectionMode, setSelectionMode] = useState(1)
   const [mistakes, setMistakes] = useState(0)
   const [gameWon, setGameWon] = useState(false)
+  const [displayWinScreen, setDisplayWinScreen] = useState(false)
   const { seconds, minutes, start, pause, reset } = useStopwatch({
     autoStart: false,
   })
   const [cookies, setCookie, removeCookie] = useCookies(['scores'])
-
-  const printBoard = () => {
-    console.log(puzzleList)
-  }
 
   const onChangeBoardState = val => {
     setBoardState(val)
@@ -43,6 +41,18 @@ const Game = props => {
 
   const onChangeMistakes = val => {
     setMistakes(val)
+    forceUpdate()
+  }
+
+  const onChangeGameWon = val => {
+    setGameWon(val)
+    setDisplayWinScreen(true)
+    saveResult()
+    forceUpdate()
+  }
+
+  const hideWinScreen = () => {
+    setDisplayWinScreen(false)
     forceUpdate()
   }
 
@@ -80,12 +90,6 @@ const Game = props => {
     pause()
   }
 
-  const onChangeGameWon = val => {
-    setGameWon(val)
-    saveResult()
-    forceUpdate()
-  }
-
   const resetBoard = newBoardSize => {
     let size = newBoardSize
     if (!size) {
@@ -106,7 +110,11 @@ const Game = props => {
 
   const nextBoard = () => {
     let newBoardIndex = Math.floor(Math.random() * puzzleList.length)
-    while (newBoardIndex === boardIndex) {
+    const completedLevelIds = cookies['scores'].map(cookie => cookie.levelId)
+    while (
+      newBoardIndex === boardIndex ||
+      completedLevelIds.includes(newBoardIndex)
+    ) {
       newBoardIndex = Math.floor(Math.random() * puzzleList.length)
     }
 
@@ -127,35 +135,42 @@ const Game = props => {
   }, [])
 
   return (
-    <div className='game'>
-      {/* <button onClick={printBoard}>Hi</button>
-      <button onClick={() => removeCookie('scores')}>Remove Cookies</button> */}
-      <GameDataDisplay
-        board_difficulty={boardDifficulty}
-        board_size={boardSize}
-        board_index={boardIndex}
-        mistakes={mistakes}
-        seconds={seconds}
-        minutes={minutes}
-      />
-      <Board
-        board_solution={boardSolution}
-        board_state={boardState}
-        board_size={boardSize}
-        on_change_board_state={onChangeBoardState}
-        selection_mode={selectionMode}
-        on_change_mistakes={onChangeMistakes}
-        game_won={gameWon}
-        on_change_game_won={onChangeGameWon}
-      />
-      <GameControls
-        selection_mode={selectionMode}
-        on_change_selection_mode={onChangeSelectionMode}
-        game_won={gameWon}
-        on_reset={() => resetBoard(null)}
-        on_next_board={nextBoard}
-      />
-    </div>
+    <>
+      {displayWinScreen && (
+        <WinScreen
+          minutes={minutes}
+          seconds={seconds}
+          hide_win_screen={hideWinScreen}
+        />
+      )}
+      <div className='game'>
+        <GameDataDisplay
+          board_difficulty={boardDifficulty}
+          board_size={boardSize}
+          board_index={boardIndex}
+          mistakes={mistakes}
+          seconds={seconds}
+          minutes={minutes}
+        />
+        <Board
+          board_solution={boardSolution}
+          board_state={boardState}
+          board_size={boardSize}
+          on_change_board_state={onChangeBoardState}
+          selection_mode={selectionMode}
+          on_change_mistakes={onChangeMistakes}
+          game_won={gameWon}
+          on_change_game_won={onChangeGameWon}
+        />
+        <GameControls
+          selection_mode={selectionMode}
+          on_change_selection_mode={onChangeSelectionMode}
+          game_won={gameWon}
+          on_reset={() => resetBoard(null)}
+          on_next_board={nextBoard}
+        />
+      </div>
+    </>
   )
 }
 

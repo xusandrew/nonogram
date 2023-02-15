@@ -85,7 +85,7 @@ function isValidBoard(board, size) {
 function generateBoard() {
   let size = Math.floor(Math.random() * 15)
   while (size < 3) {
-    size = Math.floor(Math.random() * 25)
+    size = Math.floor(Math.random() * 15)
   }
 
   let density = Math.random()
