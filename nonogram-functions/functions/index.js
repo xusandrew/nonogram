@@ -2,16 +2,10 @@ const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 
 admin.initializeApp()
+const express = require('express')
+const app = express()
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info('Hello logs!', { structuredData: true })
-  response.send('Hello from Firebase!')
-})
-
-exports.getPuzzles = functions.https.onRequest((req, res) => {
+app.get('/getPuzzles', (req, res) => {
   admin
     .firestore()
     .collection('puzzles')
@@ -26,14 +20,12 @@ exports.getPuzzles = functions.https.onRequest((req, res) => {
     .catch(err => console.error(err))
 })
 
-exports.createPuzzle = functions.https.onRequest((req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(400).json({ error: 'Method not allowed' })
-  }
-
+app.get('/createPuzzle', (req, res) => {
+  const { size, board, difficulty } = generateBoard()
   const newPuzzle = {
-    body: req.body.body,
-    difficulty: req.body.difficulty,
+    size: size,
+    body: JSON.stringify(board),
+    difficulty: difficulty,
     createAt: admin.firestore.Timestamp.fromDate(new Date()),
   }
 
@@ -49,3 +41,76 @@ exports.createPuzzle = functions.https.onRequest((req, res) => {
       console.error(err)
     })
 })
+
+// app.get('/puzzleCount', (req, res) => {
+//   admin
+//     .firestore()
+//     .collection('puzzles')
+//     .count()
+//     .get()
+//     .then(snap => {
+//       res.status(200).send(snap.data().count)
+//     })
+//     .catch(err => console.error(err))
+// })
+
+exports.api = functions.https.onRequest(app)
+
+function createSampleBoard(size, density) {
+  let entries = 0
+  let board = []
+  for (let i = 0; i < size; i++) {
+    let row = []
+    for (let j = 0; j < size; j++) {
+      if (Math.random() < density) {
+        row.push(0)
+      } else {
+        row.push(1)
+        entries += 1
+      }
+    }
+    board.push(row)
+  }
+  return board
+}
+
+function isValidBoard(board, size) {
+  let occurrences = 0
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      if (board[i][j] === 1) {
+        occurrences += 1
+      }
+    }
+  }
+
+  const totalSquares = size * size
+  if (
+    occurrences < (1 / 6) * totalSquares ||
+    occurrences > (5 / 6) * totalSquares
+  ) {
+    return false
+  }
+  return true
+}
+
+function generateBoard() {
+  let size = Math.floor(Math.random() * 15)
+  while (size < 3) {
+    size = Math.floor(Math.random() * 25)
+  }
+
+  let density = Math.random()
+  while (density < 0.3 && density > 0.7) {
+    density = Math.random()
+  }
+
+  let board = createSampleBoard(size, density)
+  while (!isValidBoard(size, board)) {
+    board = createSampleBoard(size, density)
+  }
+
+  const difficulty = (1 / 5) * (size * (1 / density))
+
+  return { size, board, difficulty }
+}
