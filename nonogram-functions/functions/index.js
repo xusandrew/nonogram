@@ -1,14 +1,14 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const app = require('express')()
 
 admin.initializeApp()
-const express = require('express')
-const app = express()
 
 app.get('/getPuzzles', (req, res) => {
   admin
     .firestore()
     .collection('puzzles')
+    .orderBy('createAt')
     .get()
     .then(data => {
       let puzzles = []
@@ -26,7 +26,7 @@ app.get('/createPuzzle', (req, res) => {
     size: size,
     body: JSON.stringify(board),
     difficulty: difficulty,
-    createAt: admin.firestore.Timestamp.fromDate(new Date()),
+    createAt: new Date().toISOString(),
   }
 
   admin
@@ -41,18 +41,6 @@ app.get('/createPuzzle', (req, res) => {
       console.error(err)
     })
 })
-
-// app.get('/puzzleCount', (req, res) => {
-//   admin
-//     .firestore()
-//     .collection('puzzles')
-//     .count()
-//     .get()
-//     .then(snap => {
-//       res.status(200).send(snap.data().count)
-//     })
-//     .catch(err => console.error(err))
-// })
 
 exports.api = functions.https.onRequest(app)
 
@@ -73,7 +61,7 @@ function createSampleBoard(size, density) {
   }
   return board
 }
-
+ 
 function isValidBoard(board, size) {
   let occurrences = 0
   for (let i = 0; i < size; i++) {

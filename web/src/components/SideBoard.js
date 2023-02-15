@@ -29,6 +29,10 @@ const SideBoard = props => {
       res += ' ' + curLen
     }
 
+    if (res === '') {
+      return '0'
+    }
+
     return res.slice(1)
   }
 
