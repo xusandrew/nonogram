@@ -9,6 +9,7 @@ import 'firebase/compat/auth'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 import Game from './Game'
+import NavBar from './components/NavBar'
 
 firebase.initializeApp({
   apiKey: 'AIzaSyDwd2q5Jv8ZchbaA62CtSFWJlXpC-7Uoh0',
@@ -30,7 +31,12 @@ function App() {
 
   const [puzzles] = useCollectionData(query, { idField: 'id' })
 
-  return <div className='App'>{puzzles && <Game puzzleList={puzzles} />}</div>
+  return (
+    <div className='app'>
+      <NavBar />
+      {puzzles && <Game puzzleList={puzzles} />}
+    </div>
+  )
 }
 
 export default App

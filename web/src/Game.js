@@ -127,11 +127,12 @@ const Game = props => {
   }, [])
 
   return (
-    <div className='App'>
-      <button onClick={printBoard}>Hi</button>
-      <button onClick={() => removeCookie('scores')}>Remove Cookies</button>
+    <div className='game'>
+      {/* <button onClick={printBoard}>Hi</button>
+      <button onClick={() => removeCookie('scores')}>Remove Cookies</button> */}
       <GameDataDisplay
         board_difficulty={boardDifficulty}
+        board_size={boardSize}
         board_index={boardIndex}
         mistakes={mistakes}
         seconds={seconds}

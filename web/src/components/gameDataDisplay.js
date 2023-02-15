@@ -2,18 +2,19 @@ import React from 'react'
 
 const GameDataDisplay = props => {
   const getDifficultyName = difficultyNumber => {
-    if (difficultyNumber <= 1) return 'Easy'
-    if (difficultyNumber <= 2) return 'Normal'
-    if (difficultyNumber <= 3) return 'Hard'
-    if (difficultyNumber <= 4) return 'Expert'
-    return 'Impossible'
+    if (difficultyNumber <= 3) return 'Impossible'
+    if (difficultyNumber <= 6) return 'Expert'
+    if (difficultyNumber <= 9) return 'Hard'
+    if (difficultyNumber <= 12) return 'Normal'
+    return 'Easy'
   }
 
   return (
     <div className='gameDataDisplay'>
       <div className='gameData'>
-        <h1>Level: {props.board_index + 1}</h1>
-        {getDifficultyName(props.board_difficulty)}
+        <div className='levelLabel'>Level: {props.board_index + 1}</div>
+        {getDifficultyName(props.board_difficulty)} - {props.board_size}x
+        {props.board_size}
       </div>
       <div>
         <div className='mistakes'>Mistakes: {props.mistakes}</div>
