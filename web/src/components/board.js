@@ -148,7 +148,13 @@ const Board = props => {
         horizontal_bar_sums={horizontalBarSums}
         on_change_horizontal_bar_sums={onChangeHorizontalBarSums}
       />
-      <div className='board' style={boardStyle}>
+      <div
+        className='board'
+        style={boardStyle}
+        onMouseLeave={() => {
+          setMouseDown(false)
+        }}
+      >
         {props.board_state?.flat().map((square, i) => {
           return (
             <div
