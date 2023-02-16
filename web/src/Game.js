@@ -14,7 +14,8 @@ const useForceUpdate = () => {
 
 const Game = props => {
   const forceUpdate = useForceUpdate()
-  const { puzzleList } = props
+  const saveScore = props.save_score
+  const { user, puzzleList, scores } = props
   const [boardSolution, setBoardSolution] = useState([])
   const [boardDifficulty, setBoardDifficulty] = useState([])
   const [boardIndex, setBoardIndex] = useState(-1)
@@ -27,7 +28,7 @@ const Game = props => {
   const { seconds, minutes, start, pause, reset } = useStopwatch({
     autoStart: false,
   })
-  const [cookies, setCookie, removeCookie] = useCookies(['scores'])
+  const [cookies, setCookie] = useCookies(['scores'])
 
   const onChangeBoardState = val => {
     setBoardState(val)
@@ -57,34 +58,23 @@ const Game = props => {
   }
 
   const saveResult = () => {
-    const currentCookies = cookies['scores']
-    if (!currentCookies) {
-      setCookie(
-        'scores',
-        [
-          {
-            levelId: boardIndex,
-            minutes: minutes,
-            seconds: seconds,
-            mistakes: mistakes,
-          },
-        ],
-        { path: '/' }
-      )
+    let data = [
+      {
+        levelId: boardIndex,
+        minutes: minutes,
+        seconds: seconds,
+        mistakes: mistakes,
+      },
+    ]
+
+    if (user) {
+      saveScore(data[0])
     } else {
-      setCookie(
-        'scores',
-        [
-          ...currentCookies,
-          {
-            levelId: boardIndex,
-            minutes: minutes,
-            seconds: seconds,
-            mistakes: mistakes,
-          },
-        ],
-        { path: '/' }
-      )
+      const currentCookies = cookies['scores']
+      if (currentCookies) {
+        data = [...currentCookies, ...data]
+      }
+      setCookie('scores', data, { path: '/' })
     }
 
     pause()
@@ -110,7 +100,17 @@ const Game = props => {
 
   const nextBoard = () => {
     let newBoardIndex = Math.floor(Math.random() * puzzleList.length)
-    const completedLevelIds = cookies['scores'].map(cookie => cookie.levelId)
+    let completedLevelIds
+    if (user) {
+      completedLevelIds = scores
+        .filter(score => score.uid === user.uid && score.mistakes === 0)
+        .map(score => score.levelId)
+    } else {
+      completedLevelIds = cookies['scores']
+        ? cookies['scores'].map(cookie => cookie.levelId)
+        : []
+    }
+
     while (
       newBoardIndex === boardIndex ||
       completedLevelIds.includes(newBoardIndex)
