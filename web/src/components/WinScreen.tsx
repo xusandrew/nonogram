@@ -1,9 +1,16 @@
 import React from 'react'
 
-const WinScreen = props => {
-  const { minutes, seconds } = props
-  const hideWinScreen = props.hide_win_screen
+interface Props {
+  minutes: Number
+  seconds: Number
+  hideWinScreen: () => void
+}
 
+export const WinScreen: React.FC<Props> = ({
+  minutes,
+  seconds,
+  hideWinScreen,
+}) => {
   return (
     <div className='winScreen'>
       <div className='winModal'>
@@ -18,5 +25,3 @@ const WinScreen = props => {
     </div>
   )
 }
-
-export default WinScreen

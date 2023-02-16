@@ -8,8 +8,8 @@ import 'firebase/compat/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 
-import Game from './Game'
-import NavBar from './components/NavBar'
+import { Game } from './Game'
+import { NavBar } from './components/NavBar'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDwd2q5Jv8ZchbaA62CtSFWJlXpC-7Uoh0',
@@ -22,18 +22,25 @@ const firebaseConfig = {
 }
 firebase.initializeApp(firebaseConfig)
 
-const auth = firebase.auth()
+const auth: any = firebase.auth()
 const firestore = firebase.firestore()
+
+interface Score {
+  levelId: number
+  minutes: number
+  seconds: number
+  mistakes: number
+}
 
 function App() {
   const [user] = useAuthState(auth)
   const puzzlesRef = firestore.collection('puzzles')
-  const puzzlesQuery = puzzlesRef.orderBy('createAt')
+  const puzzlesQuery: any = puzzlesRef.orderBy('createAt')
   const scoresRef = firestore.collection('scores')
-  const scoresQuery = scoresRef.orderBy('createAt')
+  const scoresQuery: any = scoresRef.orderBy('createAt')
 
-  const [puzzles] = useCollectionData(puzzlesQuery, { idField: 'id' })
-  const [scores] = useCollectionData(scoresQuery, { idField: 'id' })
+  const [puzzles] = useCollectionData(puzzlesQuery)
+  const [scores] = useCollectionData(scoresQuery)
 
   const signIn = () => {
     const provider = new firebase.auth.GoogleAuthProvider()
@@ -44,9 +51,9 @@ function App() {
     auth.signOut()
   }
 
-  const saveScore = async score => {
+  const saveScore = async (score: Score) => {
     await scoresRef.add({
-      uid: user.uid,
+      uid: user?.uid,
       levelId: score.levelId,
       minutes: score.minutes,
       seconds: score.seconds,
@@ -57,12 +64,12 @@ function App() {
 
   return (
     <div className='app'>
-      <NavBar user={user} sign_in={signIn} sign_out={signOut} />
+      <NavBar user={user} signIn={signIn} signOut={signOut} />
       {puzzles && (
         <Game
           puzzleList={puzzles}
           user={user}
-          save_score={saveScore}
+          saveScore={saveScore}
           scores={scores}
         />
       )}

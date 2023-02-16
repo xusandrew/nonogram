@@ -1,10 +1,26 @@
 import React, { useEffect } from 'react'
 
-const SideBoard = props => {
-  const flipArray = arr => {
-    let res = []
+interface Props {
+  onChangeHorizontalBarSums: (val: string[]) => void
+  onChangeVerticalBarSums: (val: string[]) => void
+  mode: string
+  boardSolution: number[][]
+  horizontalBarSums: string[]
+  verticalBarSums: string[]
+}
+
+export const SideBoard: React.FC<Props> = ({
+  onChangeHorizontalBarSums,
+  onChangeVerticalBarSums,
+  mode,
+  boardSolution,
+  horizontalBarSums,
+  verticalBarSums,
+}) => {
+  const flipArray = (arr: number[][]) => {
+    let res: number[][] = []
     for (let i = 0; i < arr.length; i++) {
-      let newRow = []
+      let newRow: number[] = []
       for (let j = 0; j < arr.length; j++) {
         newRow.push(arr[j][i])
       }
@@ -14,7 +30,7 @@ const SideBoard = props => {
     return res
   }
 
-  const getString = arr => {
+  const getString = (arr: number[]) => {
     let res = ''
     let curLen = 0
     for (let i = 0; i < arr.length; i++) {
@@ -38,33 +54,33 @@ const SideBoard = props => {
 
   useEffect(() => {
     if (
-      props.on_change_horizontal_bar_sums === undefined &&
-      props.on_change_vertical_bar_sums === undefined
+      onChangeHorizontalBarSums === undefined &&
+      onChangeVerticalBarSums === undefined
     )
       return
 
-    if (props.mode === 'vBars') {
-      let vertical = []
-      flipArray(props.board_solution).forEach(arr => {
+    if (mode === 'vBars') {
+      let vertical: string[] = []
+      flipArray(boardSolution).forEach(arr => {
         vertical.push(getString(arr))
       })
 
-      props.on_change_vertical_bar_sums(vertical)
-    } else if (props.mode === 'hBars') {
-      let horizontal = []
-      props.board_solution.forEach(arr => {
+      onChangeVerticalBarSums(vertical)
+    } else if (mode === 'hBars') {
+      let horizontal: string[] = []
+      boardSolution.forEach(arr => {
         horizontal.push(getString(arr))
       })
 
-      props.on_change_horizontal_bar_sums(horizontal)
+      onChangeHorizontalBarSums(horizontal)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.board_solution])
+  }, [boardSolution])
 
-  if (props.mode === 'vBars') {
+  if (mode === 'vBars') {
     return (
       <div className='sideBoard vBars'>
-        {props.vertical_bar_sums.map((str, i) => {
+        {verticalBarSums.map((str, i) => {
           return (
             <div key={i} className='sideSquare'>
               {str.split(' ').join('')}
@@ -76,7 +92,7 @@ const SideBoard = props => {
   } else {
     return (
       <div className='sideBoard hBars'>
-        {props.horizontal_bar_sums.map((str, i) => {
+        {horizontalBarSums.map((str, i) => {
           return (
             <div key={i} className='sideSquare'>
               {str}
@@ -87,5 +103,3 @@ const SideBoard = props => {
     )
   }
 }
-
-export default SideBoard

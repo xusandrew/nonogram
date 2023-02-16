@@ -1,70 +1,90 @@
 import React, { useState, useEffect } from 'react'
-import SideBoard from './SideBoard'
+import { SideBoard } from './SideBoard'
+
+interface Props {
+  boardSize: number
+  boardSolution: number[][]
+  boardState: number[][]
+  selectionMode: number
+  gameWon: boolean
+  onChangeGameWon: (val: boolean) => void
+  onChangeBoardState: any
+  onChangeMistakes: any
+}
 
 const useForceUpdate = () => {
   const [, setValue] = useState(0)
   return () => setValue(value => value + 1)
 }
 
-const Board = props => {
+export const Board: React.FC<Props> = ({
+  boardSize,
+  boardSolution,
+  boardState,
+  selectionMode,
+  gameWon,
+  onChangeGameWon,
+  onChangeBoardState,
+  onChangeMistakes,
+}) => {
   const forceUpdate = useForceUpdate()
   const [boardStyle, setBoardStyle] = useState({})
   const [mouseDown, setMouseDown] = useState(false)
-  const [firstSelected, setFirstSelected] = useState([])
-  const [verticalBarSums, setVerticalBarSums] = useState([])
-  const [horizontalBarSums, setHorizontalBarSums] = useState([])
+  const [firstSelected, setFirstSelected] = useState<number[]>([])
+  const [verticalBarSums, setVerticalBarSums] = useState<string[]>([])
+  const [horizontalBarSums, setHorizontalBarSums] = useState<string[]>([])
 
-  const getIndex = i => {
-    let row = Math.floor(i / props.board_size)
-    let column = i % props.board_size
+  const getIndex = (i: number) => {
+    let row = Math.floor(i / boardSize)
+    let column = i % boardSize
     return { row, column }
   }
 
-  const handleHover = (row, column) => {
+  const handleHover = (row: number, column: number) => {
     if (mouseDown) {
       updateBoard(row, column)
     }
   }
 
-  const onChangeVerticalBarSums = val => {
+  const onChangeVerticalBarSums = (val: string[]) => {
     setVerticalBarSums(val)
     forceUpdate()
   }
 
-  const onChangeHorizontalBarSums = val => {
+  const onChangeHorizontalBarSums = (val: string[]) => {
     setHorizontalBarSums(val)
     forceUpdate()
   }
 
-  const getTotalFromString = str => {
+  const getTotalFromString = (str: string) => {
     let total = 0
     str.split(' ').forEach(num => (total += parseInt(num)))
     return total
   }
 
-  const checkCompleteRow = (board, row, column) => {
+  const checkCompleteRow = (board: number[][], row: number, column: number) => {
     const rowTotal = getTotalFromString(horizontalBarSums[row])
     const columnTotal = getTotalFromString(verticalBarSums[column])
 
     let rowOccurrences = 0
     let columnOccurrences = 0
 
-    for (let i = 0; i < props.board_size; i++) {
+    for (let i = 0; i < boardSize; i++) {
       if (board[row][i] === 1) rowOccurrences += 1
       if (board[i][column] === 1) columnOccurrences += 1
     }
 
     if (rowTotal === rowOccurrences) {
-      for (let i = 0; i < props.board_size; i++) {
-        if (props.board_solution[row][i] === 0) {
+      for (let i = 0; i < boardSize; i++) {
+        if (boardSolution[row][i] === 0) {
           board[row][i] = 2
         }
       }
     }
 
     if (columnTotal === columnOccurrences) {
-      for (let i = 0; i < props.board_size; i++) {
-        if (props.board_solution[i][column] === 0) {
+      for (let i = 0; i < boardSize; i++) {
+        if (boardSolution[i][column] === 0) {
           board[i][column] = 2
         }
       }
@@ -74,79 +94,83 @@ const Board = props => {
   }
 
   const checkWin = () => {
-    for (let i = 0; i < props.board_size; i++) {
-      for (let j = 0; j < props.board_size; j++) {
-        if (props.board_solution[i][j] === 1) {
-          if (props.board_state[i][j] !== 1) return
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
+        if (boardSolution[i][j] === 1) {
+          if (boardState[i][j] !== 1) return
         }
       }
     }
 
-    props.on_change_game_won(true)
+    onChangeGameWon(true)
     forceUpdate()
   }
 
-  const handleMistake = (row, column) => {
-    props.on_change_board_state(boardState => {
+  const handleMistake = (row: number, column: number) => {
+    onChangeBoardState((boardState: number[][]) => {
       boardState[row][column] = 3
       return boardState
     })
 
     setTimeout(() => {
-      props.on_change_board_state(boardState => {
-        boardState[row][column] = props.board_solution[row][column]
+      onChangeBoardState((boardState: number[][]) => {
+        boardState[row][column] = boardSolution[row][column]
         return boardState
       })
     }, 500)
 
     setMouseDown(false)
-    props.on_change_mistakes(mistakes => mistakes + 1)
+    onChangeMistakes((mistakes: any) => mistakes + 1)
   }
 
-  const updateBoard = (row, column) => {
-    if (props.game_won) return
+  const updateBoard = (row: number, column: number) => {
+    if (gameWon) return
     if (firstSelected.length !== 0) {
       if (firstSelected?.[0] !== row && firstSelected?.[1] !== column) return
     }
 
-    if (props.board_state[row][column] !== 0) return
+    if (boardState[row][column] !== 0) return
 
     if (
-      (props.board_solution[row][column] === 1 && props.selection_mode !== 1) ||
-      (props.board_solution[row][column] === 0 && props.selection_mode !== 2)
+      (boardSolution[row][column] === 1 && selectionMode !== 1) ||
+      (boardSolution[row][column] === 0 && selectionMode !== 2)
     ) {
       handleMistake(row, column)
       return
     }
 
-    let tempBoard = props.board_state
-    tempBoard[row][column] = props.selection_mode
+    let tempBoard: number[][] = boardState
+    tempBoard[row][column] = selectionMode
     tempBoard = checkCompleteRow(tempBoard, row, column)
-    props.on_change_board_state(tempBoard)
+    onChangeBoardState(tempBoard)
     checkWin()
   }
 
   useEffect(() => {
     setBoardStyle({
-      gridTemplateColumns: `repeat(${props.board_size} , 1fr)`,
-      gridTemplateRows: `repeat(${props.board_size} , 1fr)`,
+      gridTemplateColumns: `repeat(${boardSize} , 1fr)`,
+      gridTemplateRows: `repeat(${boardSize} , 1fr)`,
     })
-  }, [props.board_size])
+  }, [boardSize])
 
   return (
     <div className='boardContainer'>
       <div></div>
       <SideBoard
-        board_solution={props.board_solution}
+        boardSolution={boardSolution}
         mode='vBars'
-        vertical_bar_sums={verticalBarSums}
-        on_change_vertical_bar_sums={onChangeVerticalBarSums}
+        verticalBarSums={verticalBarSums}
+        onChangeVerticalBarSums={onChangeVerticalBarSums}
+        horizontalBarSums={horizontalBarSums}
+        onChangeHorizontalBarSums={onChangeHorizontalBarSums}
       />
       <SideBoard
-        board_solution={props.board_solution}
+        boardSolution={boardSolution}
         mode='hBars'
-        horizontal_bar_sums={horizontalBarSums}
-        on_change_horizontal_bar_sums={onChangeHorizontalBarSums}
+        verticalBarSums={verticalBarSums}
+        onChangeVerticalBarSums={onChangeVerticalBarSums}
+        horizontalBarSums={horizontalBarSums}
+        onChangeHorizontalBarSums={onChangeHorizontalBarSums}
       />
       <div
         className='board'
@@ -155,7 +179,7 @@ const Board = props => {
           setMouseDown(false)
         }}
       >
-        {props.board_state?.flat().map((square, i) => {
+        {boardState?.flat().map((square, i) => {
           return (
             <div
               key={i}
@@ -191,5 +215,3 @@ const Board = props => {
     </div>
   )
 }
-
-export default Board
