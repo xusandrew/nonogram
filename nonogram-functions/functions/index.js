@@ -44,25 +44,55 @@ app.get('/createPuzzle', (req, res) => {
 
 exports.api = functions.https.onRequest(app)
 
-function createSampleBoard(size, density) {
-  let entries = 0
+function createSampleBoard(size) {
   let board = []
   for (let i = 0; i < size; i++) {
     let row = []
     for (let j = 0; j < size; j++) {
-      if (Math.random() < density) {
+      if (Math.random() < 0.5) {
         row.push(0)
       } else {
         row.push(1)
-        entries += 1
       }
     }
     board.push(row)
   }
   return board
 }
- 
+
+function hasEmpty(board, size) {
+  for (let i = 0; i < size; i++) {
+    let seenRow = false
+    let seenColumn = false
+
+    for (let j = 0; j < size; j++) {
+      if (seenRow && seenColumn) {
+        break
+      }
+      if (board[i][j] === 1) {
+        seenRow = true
+      }
+      if (board[j][i] === 1) {
+        seenColumn = true
+      }
+    }
+
+    if (!seenRow || !seenColumn) {
+      return true
+    }
+  }
+  return false
+}
+
 function isValidBoard(board, size) {
+  // Check for no empty rows
+  if (hasEmpty(board, size)) {
+    return false
+  }
+  return true
+}
+
+function getDifficulty(board, size) {
   let occurrences = 0
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
@@ -72,14 +102,9 @@ function isValidBoard(board, size) {
     }
   }
 
-  const totalSquares = size * size
-  if (
-    occurrences < (1 / 6) * totalSquares ||
-    occurrences > (5 / 6) * totalSquares
-  ) {
-    return false
-  }
-  return true
+  const cover = occurrences / (size * size)
+  const difficulty = size / cover
+  return difficulty
 }
 
 function generateBoard() {
@@ -88,17 +113,12 @@ function generateBoard() {
     size = Math.floor(Math.random() * 15)
   }
 
-  let density = Math.random()
-  while (density < 0.3 && density > 0.7) {
-    density = Math.random()
-  }
-
-  let board = createSampleBoard(size, density)
+  let board = createSampleBoard(size)
   while (!isValidBoard(size, board)) {
-    board = createSampleBoard(size, density)
+    board = createSampleBoard(size)
   }
 
-  const difficulty = (1 / 5) * (size * (1 / density))
+  const difficulty = getDifficulty(board, size)
 
   return { size, board, difficulty }
 }
