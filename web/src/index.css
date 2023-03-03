@@ -69,8 +69,28 @@ body {
     cursor: pointer;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
 .navAccount {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
     cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+.navAccount:hover {
+    text-decoration: underline;
+}
+
+.signInOutButton {
+    background-color: var(--col1);
+    color: var(--col5);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .gameDataDisplay {

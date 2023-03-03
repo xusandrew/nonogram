@@ -13,7 +13,7 @@ export const NavBar: React.FC<Props> = ({ signIn, signOut, user }) => {
       <div className='navGroup'>
         <div className='title'>Nonogram</div>
         <div className='navItems'>
-          <div>
+          <div className='navLinks'>
             <a
               href='https://www.linkedin.com/in/xusandrew'
               target='_blank'
@@ -22,7 +22,7 @@ export const NavBar: React.FC<Props> = ({ signIn, signOut, user }) => {
               Linkedin
             </a>
           </div>
-          <div>
+          <div className='navLinks'>
             <a
               href='https://github.com/xusandrew'
               target='_blank'
@@ -34,11 +34,14 @@ export const NavBar: React.FC<Props> = ({ signIn, signOut, user }) => {
         </div>
       </div>
       {user ? (
-        <div className='navAccount' onClick={signOut}>
+        <div className='navAccount'>
           {user.displayName}
+          <div className='signInOutButton' onClick={signOut}>
+            Sign Out
+          </div>
         </div>
       ) : (
-        <div className='navAccount' onClick={signIn}>
+        <div className='signInOutButton' onClick={signIn}>
           Sign In
         </div>
       )}
