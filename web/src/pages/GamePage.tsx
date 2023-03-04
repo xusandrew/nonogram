@@ -39,7 +39,7 @@ export const GamePage: React.FC<Props> = ({ auth, firestore }) => {
   }
 
   return (
-    <div className='app'>
+    <>
       {puzzles && (
         <Game
           puzzleList={puzzles}
@@ -48,6 +48,6 @@ export const GamePage: React.FC<Props> = ({ auth, firestore }) => {
           scores={scores}
         />
       )}
-    </div>
+    </>
   )
 }

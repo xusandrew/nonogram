@@ -1,6 +1,8 @@
 import React from 'react'
 import './App.css'
 
+import { Routes, Route } from 'react-router-dom'
+
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
 import 'firebase/compat/auth'
@@ -9,6 +11,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { NavBar } from './components/NavBar'
 import { GamePage } from './pages/GamePage'
+import { HomePage } from './pages/HomePage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDwd2q5Jv8ZchbaA62CtSFWJlXpC-7Uoh0',
@@ -39,7 +42,13 @@ export const App: React.FC = () => {
   return (
     <div className='app'>
       <NavBar user={user} signIn={signIn} signOut={signOut} />
-      <GamePage auth={auth} firestore={firestore} />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route
+          path='/game'
+          element={<GamePage auth={auth} firestore={firestore} />}
+        />
+      </Routes>
     </div>
   )
 }
