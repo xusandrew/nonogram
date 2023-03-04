@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 
-import { GameDataDisplay } from './components/GameDataDisplay'
-import { Board } from './components/Board'
-import { GameControls } from './components/GameControls'
-import { WinScreen } from './components/WinScreen'
+import { GameDataDisplay } from './GameDataDisplay'
+import { Board } from './Board'
+import { GameControls } from './GameControls'
+import { WinScreen } from './WinScreen'
 import { useStopwatch } from 'react-timer-hook'
 import { useCookies } from 'react-cookie'
 
