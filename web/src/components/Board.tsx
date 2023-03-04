@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { SideBoard } from './SideBoard'
+import '../styles/Board.css'
 
 interface Props {
   boardSize: number

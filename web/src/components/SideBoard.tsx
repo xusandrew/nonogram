@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 
+import '../styles/SideBoard.css'
+
 interface Props {
   onChangeHorizontalBarSums: (val: string[]) => void
   onChangeVerticalBarSums: (val: string[]) => void

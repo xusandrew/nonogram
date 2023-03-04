@@ -1,6 +1,8 @@
 import React from 'react'
 import 'firebase/compat/auth'
 
+import '../styles/NavBar.css'
+
 interface Props {
   signIn: () => void
   signOut: () => void

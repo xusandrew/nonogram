@@ -1,0 +1,54 @@
+.navBar{
+    padding:0px 30px;
+    width: 100vw - 60px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    max-width: 1;
+    height: 70px;
+    background-color: var(--col5);
+    color: var(--col1);
+    
+    box-shadow: 0px 5px 100px var(--col5);
+}
+
+.navGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:30px;
+}
+
+.title {
+    font-size: 40px;
+}
+
+.navItems {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    cursor: pointer;
+}
+
+.navAccount {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+.navAccount:hover {
+    text-decoration: underline;
+}
+
+.signInOutButton {
+    background-color: var(--col1);
+    color: var(--col5);
+    padding: 10px;
+    border-radius: 10px;
+}

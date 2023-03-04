@@ -1,4 +1,5 @@
 import React from 'react'
+import '../styles/GameDataDisplay.css'
 
 interface Props {
   boardIndex: number
@@ -27,13 +28,13 @@ export const GameDataDisplay: React.FC<Props> = ({
 
   return (
     <div className='gameDataDisplay'>
-      <div className='gameData'>
-        <div className='levelLabel'>Level: {boardIndex + 1}</div>
+      <div>
+        <div>Level: {boardIndex + 1}</div>
         {getDifficultyName(boardDifficulty)} - {boardSize}x{boardSize}
       </div>
       <div>
-        <div className='mistakes'>Mistakes: {mistakes}</div>
-        <div className='timer'>
+        <div>Mistakes: {mistakes}</div>
+        <div>
           {('0' + minutes).slice(-2)}:{('0' + seconds).slice(-2)}
         </div>
       </div>

@@ -1,0 +1,10 @@
+.gameDataDisplay {
+    display: flex;
+    margin: 30px 0px 5px 0px;
+    padding: 0px 20px;
+    align-items: flex-end;
+    width: min(95vw, 60vh);
+    justify-content: space-between;
+    font-size: 15px;
+    color: var(--col5)
+}

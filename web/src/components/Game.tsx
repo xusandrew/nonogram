@@ -7,6 +7,8 @@ import { WinScreen } from './WinScreen'
 import { useStopwatch } from 'react-timer-hook'
 import { useCookies } from 'react-cookie'
 
+import '../styles/Game.css'
+
 const useForceUpdate = () => {
   const [, setValue] = useState(0)
   return () => setValue(value => value + 1)

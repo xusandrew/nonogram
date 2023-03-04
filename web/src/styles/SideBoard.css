@@ -1,0 +1,36 @@
+.sideBoard {
+    display: flex;
+}
+
+.sideBoard.vBars {
+    flex-direction: row;
+    justify-content: center;
+    width: 100% - 4px;
+    margin-bottom: 10px;
+
+}
+
+.sideBoard.hBars {
+    flex-direction: column;
+    justify-content: center;
+    height: 100% - 4px;
+    margin-right: 10px;
+}
+
+.sideSquare {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--col5);
+    background-color: var(--col2);
+    border-radius: 20px;
+    margin: 3px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vBars>.sideSquare {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
