@@ -27,6 +27,13 @@ export const HomePage: React.FC = () => {
           Watch a more detailed tutorial
         </a>
       </div>
+
+      <div className='section normalMode'>
+        <div className='title'>Ready? Play now.</div>
+        <a className='button' href='/game'>
+          Play
+        </a>
+      </div>
     </div>
   )
 }
