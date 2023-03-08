@@ -4,8 +4,8 @@ import { GameDataDisplay } from './GameDataDisplay'
 import { Board } from './Board'
 import { GameControls } from './GameControls'
 import { WinScreen } from './WinScreen'
-import { useStopwatch } from 'react-timer-hook'
 import { useCookies } from 'react-cookie'
+import { useStopwatch } from 'react-timer-hook'
 
 import '../styles/Game.css'
 
@@ -15,10 +15,13 @@ const useForceUpdate = () => {
 }
 
 interface Props {
+  boardSolution: number[][]
+  boardDifficulty: number
+  boardIndex: number
+  boardSize: number
   saveScore: (val: Score) => void
   user: any
-  puzzleList: any
-  scores: any
+  newBoard: () => void
 }
 
 interface Score {
@@ -30,16 +33,15 @@ interface Score {
 }
 
 export const Game: React.FC<Props> = ({
-  saveScore,
+  boardSolution,
+  boardDifficulty,
+  boardIndex,
+  boardSize,
   user,
-  puzzleList,
-  scores,
+  saveScore,
+  newBoard,
 }) => {
   const forceUpdate = useForceUpdate()
-  const [boardSolution, setBoardSolution] = useState<number[][]>([])
-  const [boardDifficulty, setBoardDifficulty] = useState(-1)
-  const [boardIndex, setBoardIndex] = useState(-1)
-  const [boardSize, setBoardSize] = useState(0)
   const [boardState, setBoardState] = useState<number[][]>([])
   const [selectionMode, setSelectionMode] = useState(1)
   const [mistakes, setMistakes] = useState(0)
@@ -118,41 +120,10 @@ export const Game: React.FC<Props> = ({
     start()
   }
 
-  const nextBoard = () => {
-    let newBoardIndex = Math.floor(Math.random() * puzzleList.length)
-    let completedLevelIds
-    if (user) {
-      completedLevelIds = scores
-        .filter((score: any) => score.uid === user.uid && score.mistakes === 0)
-        .map((score: any) => score.levelId)
-    } else {
-      completedLevelIds = cookies['scores']
-        ? cookies['scores'].map((cookie: any) => cookie.levelId)
-        : []
-    }
-
-    while (
-      newBoardIndex === boardIndex ||
-      completedLevelIds.includes(newBoardIndex)
-    ) {
-      newBoardIndex = Math.floor(Math.random() * puzzleList.length)
-    }
-
-    const newBoardSize = puzzleList[newBoardIndex].size
-    const newBoardSolution = JSON.parse(puzzleList[newBoardIndex].body)
-    const newBoardDifficulty = puzzleList[newBoardIndex].difficulty
-    setBoardSolution(newBoardSolution)
-    setBoardDifficulty(newBoardDifficulty)
-    setBoardIndex(newBoardIndex)
-    setBoardSize(newBoardSize)
-    resetBoard(newBoardSize)
-  }
-
   useEffect(() => {
-    nextBoard()
-
+    resetBoard(boardSize)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [boardSize])
 
   return (
     <>
@@ -186,7 +157,7 @@ export const Game: React.FC<Props> = ({
           selectionMode={selectionMode}
           onChangeSelectionMode={onChangeSelectionMode}
           onReset={() => resetBoard(undefined)}
-          onNextBoard={nextBoard}
+          onNextBoard={newBoard}
         />
       </div>
     </>
