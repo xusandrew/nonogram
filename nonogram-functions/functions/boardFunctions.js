@@ -40,49 +40,18 @@ function hasEmpty(board, size) {
   return false
 }
 
-function isValidBoard(board, size) {
-  // Check for no empty rows
-  if (hasEmpty(board, size)) {
-    return false
-  }
-  return true
-}
-
 function getDifficulty(board, size) {
-  let occurrences = 0
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
-      if (board[i][j] === 1) {
-        occurrences += 1
-      }
-    }
-  }
-
-  const cover = occurrences / (size * size)
-  const difficulty = size / cover
-  return difficulty
+  /* 
+  Strategies for finding squares.
+    - 
+  */
 }
 
-function generateBoard() {
-  let size = Math.floor(Math.random() * 15)
-  while (size < 3) {
-    size = Math.floor(Math.random() * 15)
-  }
-
-  let board = createSampleBoard(size)
-  while (!isValidBoard(size, board)) {
-    board = createSampleBoard(size)
-  }
-
-  const difficulty = getDifficulty(board, size)
-
-  return { size, board, difficulty }
-}
+function generateBoard() {}
 
 module.exports = {
   createSampleBoard,
   hasEmpty,
-  isValidBoard,
   getDifficulty,
   generateBoard,
 }

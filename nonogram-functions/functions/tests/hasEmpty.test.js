@@ -1,6 +1,6 @@
 const { hasEmpty } = require('../boardFunctions')
 
-test('hasEmpty detects empty row', () => {
+test('Detects empty row', () => {
   const board = [
     [0, 0, 0],
     [1, 1, 1],
@@ -10,7 +10,7 @@ test('hasEmpty detects empty row', () => {
   expect(hasEmpty(board, 3)).toBe(true)
 })
 
-test('hasEmpty detects empty column', () => {
+test('Detects empty column', () => {
   const board = [
     [1, 1, 0],
     [1, 1, 0],
@@ -20,7 +20,7 @@ test('hasEmpty detects empty column', () => {
   expect(hasEmpty(board, 3)).toBe(true)
 })
 
-test('hasEmpty detects empty arbitrary row/column', () => {
+test('Detects empty arbitrary row/column', () => {
   const board = [
     [1, 1, 1],
     [0, 0, 0],
@@ -30,7 +30,7 @@ test('hasEmpty detects empty arbitrary row/column', () => {
   expect(hasEmpty(board, 3)).toBe(true)
 })
 
-test('hasEmpty returns false when no empty rows/column', () => {
+test('Returns false when no empty rows/column', () => {
   const board = [
     [1, 0, 1],
     [0, 1, 0],
