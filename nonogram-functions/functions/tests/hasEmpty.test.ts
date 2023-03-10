@@ -1,4 +1,4 @@
-import { hasEmpty } from '../boardFunctions'
+import { hasEmpty } from '../src/boardFunctions'
 
 test('Detects empty row', () => {
   const board = [

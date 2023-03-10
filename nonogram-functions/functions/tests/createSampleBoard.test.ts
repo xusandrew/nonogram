@@ -1,4 +1,4 @@
-import { createSampleBoard } from '../boardFunctions'
+import { createSampleBoard } from '../src/boardFunctions'
 
 test('Creates board of specified size', () => {
   const size = 3

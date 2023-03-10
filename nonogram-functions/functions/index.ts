@@ -4,7 +4,7 @@ const app = require('express')()
 
 admin.initializeApp()
 
-app.get('/getPuzzles', (req:any, res:any) => {
+app.get('/getPuzzles', (_:any, res:any) => {
   admin
     .firestore()
     .collection('puzzles')
@@ -20,7 +20,7 @@ app.get('/getPuzzles', (req:any, res:any) => {
     .catch((err:any) => console.error(err))
 })
 
-app.get('/createPuzzle', (req:any, res:any) => {
+app.get('/createPuzzle', (_:any, res:any) => {
   // const { size, board, difficulty } = generateBoard()
   const newPuzzle = {
   //   size: size,
