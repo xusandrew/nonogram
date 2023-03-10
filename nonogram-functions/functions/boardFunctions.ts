@@ -1,8 +1,8 @@
-function createSampleBoard(size) {
+function createSampleBoard(size:number) {
   /* Creates a random board with randomly placed 0s and 1s*/
-  let board = []
+  let board = <number[][]>[]
   for (let i = 0; i < size; i++) {
-    let row = []
+    let row = <number[]>[]
     for (let j = 0; j < size; j++) {
       if (Math.random() < 0.5) {
         row.push(0)
@@ -15,7 +15,7 @@ function createSampleBoard(size) {
   return board
 }
 
-function hasEmpty(board, size) {
+function hasEmpty(board:number[][], size:number) {
   /* Checking if a board has an empty row/column */
   for (let i = 0; i < size; i++) {
     let seenRow = false
@@ -40,18 +40,10 @@ function hasEmpty(board, size) {
   return false
 }
 
-function getDifficulty(board, size) {
-  /* 
-  Strategies for finding squares.
-    - 
-  */
-}
-
 function generateBoard() {}
 
 module.exports = {
   createSampleBoard,
   hasEmpty,
-  getDifficulty,
   generateBoard,
 }
