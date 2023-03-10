@@ -1,4 +1,4 @@
-function createSampleBoard(size:number) {
+export function createSampleBoard(size:number) {
   /* Creates a random board with randomly placed 0s and 1s*/
   let board = <number[][]>[]
   for (let i = 0; i < size; i++) {
@@ -15,7 +15,7 @@ function createSampleBoard(size:number) {
   return board
 }
 
-function hasEmpty(board:number[][], size:number) {
+export function hasEmpty(board:number[][], size:number) {
   /* Checking if a board has an empty row/column */
   for (let i = 0; i < size; i++) {
     let seenRow = false
@@ -40,10 +40,4 @@ function hasEmpty(board:number[][], size:number) {
   return false
 }
 
-function generateBoard() {}
-
-module.exports = {
-  createSampleBoard,
-  hasEmpty,
-  generateBoard,
-}
+export function generateBoard() {}

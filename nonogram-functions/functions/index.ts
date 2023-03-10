@@ -10,14 +10,14 @@ app.get('/getPuzzles', (req:any, res:any) => {
     .collection('puzzles')
     .orderBy('createAt')
     .get()
-    .then(data => {
+    .then((data:any) => {
       let puzzles = <number[][]>[]
-      data.forEach(doc => {
+      data.forEach((doc:any) => {
         puzzles.push(doc.data())
       })
       return res.json(puzzles)
     })
-    .catch(err => console.error(err))
+    .catch((err:any) => console.error(err))
 })
 
 app.get('/createPuzzle', (req:any, res:any) => {
@@ -33,10 +33,10 @@ app.get('/createPuzzle', (req:any, res:any) => {
     .firestore()
     .collection('puzzles')
     .add(newPuzzle)
-    .then(doc => {
+    .then((doc:any) => {
       return res.json({ message: `document ${doc.id} created successfully.` })
     })
-    .catch(err => {
+    .catch((err:any) => {
       res.status(500).json({ error: 'something went wrong' })
       console.error(err)
     })

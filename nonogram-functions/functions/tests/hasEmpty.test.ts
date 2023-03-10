@@ -1,4 +1,4 @@
-const { hasEmpty } = require('../boardFunctions')
+import { hasEmpty } from '../boardFunctions'
 
 test('Detects empty row', () => {
   const board = [

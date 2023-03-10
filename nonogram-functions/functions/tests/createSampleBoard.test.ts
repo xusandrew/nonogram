@@ -1,4 +1,4 @@
-const { createSampleBoard } = require('../boardFunctions')
+import { createSampleBoard } from '../boardFunctions'
 
 test('Creates board of specified size', () => {
   const size = 3
