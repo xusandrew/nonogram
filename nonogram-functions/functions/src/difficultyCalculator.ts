@@ -39,34 +39,6 @@ export function getBlockNums(rawNums: number[]) {
   return out
 }
 
-export function getPossibleFromBlockNums(blockNums: number[], size: number) {
-  // Assume row is empty, and return a new row with guaranteed blocks
-
-  // Create smallest row
-  let smallestRow: number[] = []
-  for (let blockIndex = 0; blockIndex < blockNums.length; blockIndex++) {
-    if (blockIndex != 0) {
-      smallestRow.push(0)
-    }
-    smallestRow = smallestRow.concat(new Array(blockNums[blockIndex]).fill(1))
-  }
-
-  const extraSpaces = <number[]>new Array(size - smallestRow.length).fill(0)
-  const leftAlignRow = smallestRow.concat(extraSpaces)
-  const rightAlignRow = extraSpaces.concat(smallestRow)
-
-  let result: number[] = []
-  for (let i = 0; i < size; i++) {
-    if (leftAlignRow[i] === 1 && rightAlignRow[i] === 1) {
-      result.push(1)
-    } else {
-      result.push(0)
-    }
-  }
-
-  return result
-}
-
 export function getPossiblePermutations(blockNums: number[], size: number) {
   // Recursively find block permutations
   if (blockNums.length == 0) return []
@@ -92,6 +64,88 @@ export function getPossiblePermutations(blockNums: number[], size: number) {
   }
 
   return output
+}
+
+export function removePermutationsMatchingCurrentState(
+  currentState: number[],
+  possiblePermutations: number[][]
+) {
+  // filters out the permutations that do not equal currentState
+
+  // indexes of the currentState which are defined (not -1)
+  let definedIndex: number[] = []
+  currentState.forEach((num, i) => {
+    if (num !== -1) definedIndex.push(i)
+  })
+
+  let removeIndex: number[] = []
+
+  possiblePermutations.forEach((perm, i) => {
+    for (const j of definedIndex) {
+      if (perm[j] !== currentState[j]) {
+        removeIndex.push(i)
+        break
+      }
+    }
+  })
+
+  removeIndex.reverse().forEach((index: number) => {
+    possiblePermutations.splice(index, 1)
+  })
+
+  return possiblePermutations
+}
+
+export function getIndexesOfMatchingColumns(
+  possiblePermutations: number[][],
+  size: number
+) {
+  // check if any of the columns contain the same value, and returns
+  // the indexes
+
+  // result[0] will be indexes with zeroes
+  // result[1] will be indexes ones
+  let result: number[][] = [[], []]
+
+  for (let i = 0; i < size; i++) {
+    let foundNotEqual = false
+
+    const desiredVal = possiblePermutations[0][i]
+    for (let j = 1; j < possiblePermutations.length; j++) {
+      if (possiblePermutations[j][i] !== desiredVal) {
+        foundNotEqual = true
+        break
+      }
+    }
+
+    if (!foundNotEqual) {
+      // column should be all the same digit
+      result[desiredVal].push(i)
+    }
+  }
+
+  return result
+}
+
+export function filterPermutations(
+  currentState: number[],
+  possiblePermutations: number[][],
+  size: number
+) {
+  // Will be given currentState in form
+  // [0, 0, 1, 1, -1], where -1 is unsure, 0 is unfilled and 1 is filled
+
+  // first filters out the permutations that do not equal currentState
+  possiblePermutations = removePermutationsMatchingCurrentState(
+    currentState,
+    possiblePermutations
+  )
+
+  console.log(possiblePermutations)
+
+  // returns a list of lists of indexes for which values are guaranteed 0 or 1.
+  // console.log(getIndexesOfMatchingColumns(possiblePermutations, size))
+  return getIndexesOfMatchingColumns(possiblePermutations, size)
 }
 
 // export function getPossibleIndexes(
