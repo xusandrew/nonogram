@@ -1,14 +1,7 @@
-// export function getDifficulty(board:number[][], size:number) {
-//
-// Strategies for finding squares.
-//   - Take the sum of the blocks and 1 for each space, if that sum == size,
-//   row is filled
-//       - i.e the row "6 3" in a size 10 game, 6 + 1 + 3 = 10 thus solvable
-//   - Take the sum of blocks + spaces, and lay the blocks aligned to the start,
-//   then to the end, and find where each block overlaps
-//   -
-//
-// }
+export function generateEmptyBoard(size: number) {
+  // Returns array of -1s
+  return new Array(size).fill(new Array(size).fill(-1))
+}
 
 export function getSumFromBlockNums(blockNums: number[]) {
   //   Get number of squares the blocks must take up
@@ -18,32 +11,53 @@ export function getSumFromBlockNums(blockNums: number[]) {
   )
 }
 
-export function getBlockNums(rawNums: number[]) {
+export function getRowBlockNums(board: number[][]) {
+  // Returns the block nums from the rows of the board
+  let result: number[][] = []
+  board.forEach(row => {
+    result.push(getBlockNumsForSingle(row))
+  })
+  return result
+}
+
+export function getColBlockNums(board: number[][]) {
+  // Returns the block nums from the rows of the board
+  let result: number[][] = []
+
+  for (let i = 0; i < board.length; i++) {
+    const col = board.map(row => row[i])
+    result.push(getBlockNumsForSingle(col))
+  }
+
+  return result
+}
+
+export function getBlockNumsForSingle(nums: number[]) {
   // Takes the raw row, and returns the block nums
   // rawNums = [1,1,1,0,1] => [3, 1]
-  let out: number[] = []
+  let result: number[] = []
   let currentBlockLen = 0
-  for (let i = 0; i < rawNums.length; i++) {
-    if (rawNums[i] == 0) {
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] == 0) {
       if (currentBlockLen > 0) {
-        out.push(currentBlockLen)
+        result.push(currentBlockLen)
         currentBlockLen = 0
       }
-    } else if (rawNums[i] == 1) {
+    } else if (nums[i] == 1) {
       currentBlockLen++
     }
   }
   if (currentBlockLen > 0) {
-    out.push(currentBlockLen)
+    result.push(currentBlockLen)
   }
-  return out
+  return result
 }
 
 export function getPossiblePermutations(blockNums: number[], size: number) {
   // Recursively find block permutations
   if (blockNums.length == 0) return []
 
-  let output: number[][] = []
+  let result: number[][] = []
   const remainingLen = size - getSumFromBlockNums(blockNums.slice(1)) - 1
   const maxIndex = remainingLen - blockNums[0]
 
@@ -55,15 +69,15 @@ export function getPossiblePermutations(blockNums: number[], size: number) {
       perm = perm.concat([0])
       getPossiblePermutations(blockNums.slice(1), size - perm.length).forEach(
         (remaining: number[]) => {
-          output.push(perm.concat(remaining))
+          result.push(perm.concat(remaining))
         }
       )
     } else {
-      output.push(perm.concat(new Array(size - perm.length).fill(0)))
+      result.push(perm.concat(new Array(size - perm.length).fill(0)))
     }
   }
 
-  return output
+  return result
 }
 
 export function removePermutationsMatchingCurrentState(
@@ -141,22 +155,89 @@ export function filterPermutations(
     possiblePermutations
   )
 
-  console.log(possiblePermutations)
-
   // returns a list of lists of indexes for which values are guaranteed 0 or 1.
-  // console.log(getIndexesOfMatchingColumns(possiblePermutations, size))
+  // result = [
+  //  [0,1,2],   // values are 0
+  //  [3,4,5]    // values are 1
+  // ]
+
   return getIndexesOfMatchingColumns(possiblePermutations, size)
 }
 
-// export function getPossibleIndexes(
-//   curState: number[],
-//   blockNums: number[],
-//   size: number
-// ) {
-//   // First generates all possible row permutations with the given block nums
-//   let possiblePermutations: number[][] = []
+export function findSquaresPerRow(
+  boardState: number[][],
+  rowBlockNums: number[][],
+  size: number
+) {
+  let result: number[][][] = [[], []]
+  boardState.forEach((row, rowIndex) => {
+    // possible permutations of given blockNums
+    const perms: number[][] = getPossiblePermutations(
+      rowBlockNums[rowIndex],
+      size
+    )
 
-//   // then compares this with curState
-//   // compare each value the possible row permutations that are left
-//   // if the value is the same for all states, return that index as a solution
+    // filter permutations and give out values
+    const values: number[][] = filterPermutations(row, perms, size)
+
+    // Add 0s to result
+    values[0].forEach(zeroIndex => {
+      result[0].push([rowIndex, zeroIndex])
+    })
+
+    // Add 1s to result
+    values[1].forEach(oneIndex => {
+      result[1].push([rowIndex, oneIndex])
+    })
+  })
+  return result
+}
+
+export function findSquaresPerCol(
+  boardState: number[][],
+  colBlockNums: number[][],
+  size: number
+) {
+  let result: number[][][] = [[], []]
+
+  for (let colIndex = 0; colIndex < size; colIndex++) {
+    const col = boardState.map(row => row[colIndex])
+
+    const perms: number[][] = getPossiblePermutations(
+      colBlockNums[colIndex],
+      size
+    )
+
+    // filter permutations and give out values
+    const values: number[][] = filterPermutations(col, perms, size)
+
+    // Add 0s to result
+    values[0].forEach(zeroIndex => {
+      result[0].push([zeroIndex, colIndex])
+    })
+
+    // Add 1s to result
+    values[1].forEach(oneIndex => {
+      result[1].push([oneIndex, colIndex])
+    })
+  }
+  return result
+}
+
+// export function getDifficulty(board: number[][], size: number) {
+//   // Main function to get difficulty
+
+//   let difficulty = 0
+//   let boardState: number[][] = generateEmptyBoard(size)
+
+//   const rowBlockNums = getRowBlockNums(board)
+//   const colBlockNums = getColBlockNums(board)
+
+//   let boardComplete = false
+//   while (!boardComplete) {
+//     // On every iteration, keep track of zeroes and ones
+//     let squaresFound: number[][][] = [[], []]
+
+//     // Check the rows
+//   }
 // }
