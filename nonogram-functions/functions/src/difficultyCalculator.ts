@@ -1,6 +1,9 @@
 export function generateEmptyBoard(size: number) {
   // Returns array of -1s
-  const result: number[][] = new Array(size).fill(new Array(size).fill(-1))
+  const result: number[][] = []
+  for (let i = 0; i < size; i++) {
+    result.push(new Array(size).fill(-1))
+  }
   return result
 }
 
@@ -127,6 +130,9 @@ export function getIndexesOfMatchingColumns(
   // result[0] will be indexes with zeroes
   // result[1] will be indexes ones
   let result: number[][] = [[], []]
+  if (possiblePermutations.length === 0) {
+    return result
+  }
 
   for (let i = 0; i < size; i++) {
     let foundNotEqual = false
@@ -273,12 +279,7 @@ export function applyChangesToBoard(
 }
 
 export function isBoardComplete(boardState: number[][]) {
-  boardState.forEach(row => {
-    row.forEach(num => {
-      if (num === -1) return false
-    })
-  })
-  return true
+  return !boardState.flat().includes(-1)
 }
 
 export function getDifficulty(board: number[][], size: number) {
@@ -307,8 +308,8 @@ export function getDifficulty(board: number[][], size: number) {
     )
 
     // Use set to make values unique
-    let zeroSquares = [...new Set(rowZeroes.concat(colZeroes))]
-    let oneSquares = [...new Set(rowOnes.concat(colOnes))]
+    const zeroSquares = [...new Set(rowZeroes.concat(colZeroes))]
+    const oneSquares = [...new Set(rowOnes.concat(colOnes))]
 
     // Check if unsolvable
     if (zeroSquares.length + oneSquares.length === 0) {
@@ -322,9 +323,7 @@ export function getDifficulty(board: number[][], size: number) {
     // Apply changes to boardState
     boardState = applyChangesToBoard(boardState, zeroSquares, oneSquares)
 
-    if (isBoardComplete(boardState)) {
-      boardComplete = true
-    }
+    boardComplete = isBoardComplete(boardState)
 
     iteration++
   }
