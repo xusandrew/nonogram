@@ -1,4 +1,7 @@
-import { getRowBlockNums, getColBlockNums } from '../src/difficultyCalculator'
+import {
+  getRowBlockNums,
+  getColBlockNums,
+} from '../../src/difficultyCalculator'
 
 test('Rows of grid size 3', () => {
   const board = [

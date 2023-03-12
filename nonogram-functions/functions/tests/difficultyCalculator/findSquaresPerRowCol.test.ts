@@ -1,7 +1,7 @@
 import {
   findSquaresPerRow,
   findSquaresPerCol,
-} from '../src/difficultyCalculator'
+} from '../../src/difficultyCalculator'
 
 test('Rows of grid size 3', () => {
   const boardState = [

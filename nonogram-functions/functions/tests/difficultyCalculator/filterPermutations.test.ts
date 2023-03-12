@@ -1,7 +1,7 @@
 import {
   filterPermutations,
   getPossiblePermutations,
-} from '../src/difficultyCalculator'
+} from '../../src/difficultyCalculator'
 
 test('1 size 1 block with total size 3', () => {
   const size = 3

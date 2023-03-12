@@ -1,4 +1,4 @@
-import { getBlockNumsForSingle } from '../src/difficultyCalculator'
+import { getBlockNumsForSingle } from '../../src/difficultyCalculator'
 
 test('Empty Array', () => {
   expect(getBlockNumsForSingle([])).toStrictEqual([])

@@ -1,4 +1,4 @@
-import { getPossiblePermutations } from '../src/difficultyCalculator'
+import { getPossiblePermutations } from '../../src/difficultyCalculator'
 
 test('Permutations of no block', () => {
   const answer: number[][] = []

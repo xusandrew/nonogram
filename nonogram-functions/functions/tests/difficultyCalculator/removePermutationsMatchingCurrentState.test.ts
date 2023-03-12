@@ -1,7 +1,7 @@
 import {
   removePermutationsMatchingCurrentState,
   getPossiblePermutations,
-} from '../src/difficultyCalculator'
+} from '../../src/difficultyCalculator'
 
 test('1 block of size 6 of total size 10', () => {
   const size = 10
