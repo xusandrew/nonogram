@@ -1,6 +1,7 @@
 export function generateEmptyBoard(size: number) {
   // Returns array of -1s
-  return new Array(size).fill(new Array(size).fill(-1))
+  const result: number[][] = new Array(size).fill(new Array(size).fill(-1))
+  return result
 }
 
 export function getSumFromBlockNums(blockNums: number[]) {
@@ -55,6 +56,12 @@ export function getBlockNumsForSingle(nums: number[]) {
 
 export function getPossiblePermutations(blockNums: number[], size: number) {
   // Recursively find block permutations
+  // returns list of lists
+  // i.e result = [
+  //   [1, 0, 0],
+  //   [0, 1, 0],
+  //   [0, 0, 1]
+  // ]
   if (blockNums.length == 0) return []
 
   let result: number[][] = []
@@ -141,6 +148,25 @@ export function getIndexesOfMatchingColumns(
   return result
 }
 
+export function filterOldIndexes(currentState: number[], indexes: number[][]) {
+  let result: number[][] = [[], []]
+
+  // For each 0
+  indexes[0].forEach(zeroIndex => {
+    if (currentState[zeroIndex] === -1) {
+      result[0].push(zeroIndex)
+    }
+  })
+
+  // For each 1
+  indexes[1].forEach(oneIndex => {
+    if (currentState[oneIndex] === -1) {
+      result[1].push(oneIndex)
+    }
+  })
+  return result
+}
+
 export function filterPermutations(
   currentState: number[],
   possiblePermutations: number[][],
@@ -156,12 +182,15 @@ export function filterPermutations(
   )
 
   // returns a list of lists of indexes for which values are guaranteed 0 or 1.
-  // result = [
+  // indexes = [
   //  [0,1,2],   // values are 0
   //  [3,4,5]    // values are 1
   // ]
+  let indexes = getIndexesOfMatchingColumns(possiblePermutations, size)
 
-  return getIndexesOfMatchingColumns(possiblePermutations, size)
+  // only return indexes that are new compared to currentState
+  const result = filterOldIndexes(currentState, indexes)
+  return result
 }
 
 export function findSquaresPerRow(
@@ -169,7 +198,10 @@ export function findSquaresPerRow(
   rowBlockNums: number[][],
   size: number
 ) {
+  // result[0] = points with zero
+  // result[1] = points with one
   let result: number[][][] = [[], []]
+
   boardState.forEach((row, rowIndex) => {
     // possible permutations of given blockNums
     const perms: number[][] = getPossiblePermutations(
@@ -198,6 +230,8 @@ export function findSquaresPerCol(
   colBlockNums: number[][],
   size: number
 ) {
+  // result[0] = points with zero
+  // result[1] = points with one
   let result: number[][][] = [[], []]
 
   for (let colIndex = 0; colIndex < size; colIndex++) {
@@ -224,20 +258,75 @@ export function findSquaresPerCol(
   return result
 }
 
-// export function getDifficulty(board: number[][], size: number) {
-//   // Main function to get difficulty
+export function applyChangesToBoard(
+  boardState: number[][],
+  zeroSquares: number[][],
+  oneSquares: number[][]
+) {
+  zeroSquares.forEach(([i, j]) => {
+    boardState[i][j] = 0
+  })
+  oneSquares.forEach(([i, j]) => {
+    boardState[i][j] = 1
+  })
+  return boardState
+}
 
-//   let difficulty = 0
-//   let boardState: number[][] = generateEmptyBoard(size)
+export function isBoardComplete(boardState: number[][]) {
+  boardState.forEach(row => {
+    row.forEach(num => {
+      if (num === -1) return false
+    })
+  })
+  return true
+}
 
-//   const rowBlockNums = getRowBlockNums(board)
-//   const colBlockNums = getColBlockNums(board)
+export function getDifficulty(board: number[][], size: number) {
+  // Main function to get difficulty
 
-//   let boardComplete = false
-//   while (!boardComplete) {
-//     // On every iteration, keep track of zeroes and ones
-//     let squaresFound: number[][][] = [[], []]
+  let difficulty = 0
+  let boardState: number[][] = generateEmptyBoard(size)
 
-//     // Check the rows
-//   }
-// }
+  const rowBlockNums = getRowBlockNums(board)
+  const colBlockNums = getColBlockNums(board)
+
+  let iteration = 1
+  let boardComplete = false
+  while (!boardComplete) {
+    // On every iteration, keep track of zeroes and ones
+    const [rowZeroes, rowOnes] = findSquaresPerRow(
+      boardState,
+      rowBlockNums,
+      size
+    )
+
+    const [colZeroes, colOnes] = findSquaresPerCol(
+      boardState,
+      colBlockNums,
+      size
+    )
+
+    // Use set to make values unique
+    let zeroSquares = [...new Set(rowZeroes.concat(colZeroes))]
+    let oneSquares = [...new Set(rowOnes.concat(colOnes))]
+
+    // Check if unsolvable
+    if (zeroSquares.length + oneSquares.length === 0) {
+      return -1
+    }
+
+    // difficulty calculation algorithm
+    difficulty +=
+      (1 / iteration) * (0.5 * zeroSquares.length + oneSquares.length)
+
+    // Apply changes to boardState
+    boardState = applyChangesToBoard(boardState, zeroSquares, oneSquares)
+
+    if (isBoardComplete(boardState)) {
+      boardComplete = true
+    }
+
+    iteration++
+  }
+  return difficulty
+}
