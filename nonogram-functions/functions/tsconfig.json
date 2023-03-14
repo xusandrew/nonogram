@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2019",
+    "types": ["@types/jest", "jest"],
+    "typeRoots": ["./src/types", "./node_modules/@types"]
+  },
+  "compileOnSave": true,
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": [
+    "src",
+    "lib/index.js",
+    "lib/boardFunctions.js",
+    "lib/difficultyCalculator.js"
+  ]
+}
