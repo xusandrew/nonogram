@@ -1,4 +1,6 @@
-export function createSampleBoard(size:number) {
+import { getDifficulty } from './difficultyCalculator'
+
+export function createSampleBoard(size: number) {
   /* Creates a random board with randomly placed 0s and 1s*/
   let board = <number[][]>[]
   for (let i = 0; i < size; i++) {
@@ -15,7 +17,7 @@ export function createSampleBoard(size:number) {
   return board
 }
 
-export function hasEmpty(board:number[][], size:number) {
+export function hasEmpty(board: number[][], size: number) {
   /* Checking if a board has an empty row/column */
   for (let i = 0; i < size; i++) {
     let seenRow = false
@@ -40,4 +42,25 @@ export function hasEmpty(board:number[][], size:number) {
   return false
 }
 
-export function generateBoard() {}
+export function generateBoard(size?: number) {
+  if (!size) {
+    size = Math.floor(Math.random() * 10) + 4
+  }
+
+  let board = createSampleBoard(size)
+  let difficulty = getDifficulty(board, size)
+
+  while (hasEmpty(board, size) || difficulty === -1) {
+    board = createSampleBoard(size)
+    difficulty = getDifficulty(board, size)
+  }
+  return { size, board, difficulty }
+}
+
+// generateBoard(5)
+
+// For 5x5 -
+// under 75 easy
+// 75 -100 medium
+// 100 and above is hard
+// 125 and above is impossible

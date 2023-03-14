@@ -318,7 +318,7 @@ export function getDifficulty(board: number[][], size: number) {
 
     // difficulty calculation algorithm
     difficulty +=
-      (1 / iteration) * (0.5 * zeroSquares.length + oneSquares.length)
+      iteration ** 1.2 * (0.2 * zeroSquares.length + oneSquares.length)
 
     // Apply changes to boardState
     boardState = applyChangesToBoard(boardState, zeroSquares, oneSquares)

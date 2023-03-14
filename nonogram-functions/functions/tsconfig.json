@@ -1,21 +1,24 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "jsx": "preserve",
-    "lib": ["dom", "esnext"],
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "node",
-    "noEmit": true,
+    "module": "commonjs",
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "preserveConstEnums": true,
-    "removeComments": false,
-    "skipLibCheck": true,
+    "outDir": "lib",
     "sourceMap": true,
     "strict": true,
+    "target": "es2019",
     "types": ["@types/jest", "jest"],
     "typeRoots": ["./src/types", "./node_modules/@types"]
-  }
+  },
+  "compileOnSave": true,
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": [
+    "src",
+    "lib/index.js",
+    "lib/boardFunctions.js",
+    "lib/difficultyCalculator.js"
+  ]
 }
