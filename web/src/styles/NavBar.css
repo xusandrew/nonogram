@@ -56,3 +56,11 @@
 .signInOutButton:hover {
     cursor: pointer;
 }
+
+.navLink {
+    font-size: small;
+}
+
+.navLink:hover {
+    text-decoration: underline;
+}

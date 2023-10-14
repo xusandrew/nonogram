@@ -40,6 +40,7 @@
     max-width: 80%;
 }
 
+
 .tutorial {
     background-color: var(--col5);
     color: var(--col1);
@@ -52,6 +53,13 @@
 
 .tutorial > .description {
     max-width: 80%;
+    gap:20px;
+}
+
+.tutorial > .description > .description-title {
+    font-weight: bold;
+    font-size: 2vw;
+    margin-top: 20px;
 }
 
 .tutorial > .videoButton {

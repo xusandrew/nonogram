@@ -17,22 +17,13 @@ export const NavBar: React.FC<Props> = ({ signIn, signOut, user }) => {
           Nonogram
         </a>
         <div className='navItems'>
-          <div className='navLinks'>
+          <div className='navLink'>
             <a
               href='https://www.linkedin.com/in/xusandrew'
               target='_blank'
               rel='noreferrer noopener'
             >
-              Linkedin
-            </a>
-          </div>
-          <div className='navLinks'>
-            <a
-              href='https://github.com/xusandrew'
-              target='_blank'
-              rel='noreferrer noopener'
-            >
-              Github
+              Find me on Linkedin :)
             </a>
           </div>
         </div>
