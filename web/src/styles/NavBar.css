@@ -42,7 +42,7 @@
     justify-content: center;
 }
 
-.navAccount:hover {
+.userName:hover {
     text-decoration: underline;
 }
 
@@ -51,4 +51,8 @@
     color: var(--col5);
     padding: 10px;
     border-radius: 10px;
+}
+
+.signInOutButton:hover {
+    cursor: pointer;
 }

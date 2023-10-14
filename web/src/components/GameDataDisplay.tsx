@@ -19,10 +19,10 @@ export const GameDataDisplay: React.FC<Props> = ({
   seconds,
 }) => {
   const getDifficultyName = (difficultyNumber: number) => {
-    if (difficultyNumber <= 3) return 'Easy'
-    if (difficultyNumber <= 6) return 'Normal'
-    if (difficultyNumber <= 9) return 'Hard'
-    if (difficultyNumber <= 12) return 'Expert'
+    if (difficultyNumber <= 50) return 'Easy'
+    if (difficultyNumber <= 100) return 'Normal'
+    if (difficultyNumber <= 150) return 'Hard'
+    if (difficultyNumber <= 200) return 'Expert'
     return 'Impossible'
   }
 

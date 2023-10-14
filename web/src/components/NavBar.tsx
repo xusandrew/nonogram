@@ -13,7 +13,9 @@ export const NavBar: React.FC<Props> = ({ signIn, signOut, user }) => {
   return (
     <div className='navBar'>
       <div className='navGroup'>
-        <div className='title'>Nonogram</div>
+        <a className='title' href='/'>
+          Nonogram
+        </a>
         <div className='navItems'>
           <div className='navLinks'>
             <a
@@ -37,7 +39,7 @@ export const NavBar: React.FC<Props> = ({ signIn, signOut, user }) => {
       </div>
       {user ? (
         <div className='navAccount'>
-          {user.displayName}
+          <div className='userName'>{user.displayName}</div>
           <div className='signInOutButton' onClick={signOut}>
             Sign Out
           </div>
